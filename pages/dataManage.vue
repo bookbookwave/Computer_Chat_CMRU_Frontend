@@ -1,10 +1,11 @@
 <template>
   <div class="overflow-auto">
-    <ContainerConfigTable :items="getUsers?.users" :headers="data.headers" title="User" text-button="Add User" />
+    <ContainerConfigTable :items="data.getUsers" :headers="data.headers" title="User" text-button="Add User" />
   </div>
 </template>
 <script lang="ts" setup>
-useAsyncData()
+import { User } from '~~/types/graphql';
+
 
 const data = reactive({
   getUsers: [],
@@ -22,17 +23,17 @@ const data = reactive({
 
 })
 type typeUsers = {
-      users: {
-      id: string,
-      name: string,
-      email: string,
-      password: string,
-      role: string,
-      avatar: string,
-      createAt: string,
-      updateAt: string,
-    }[]
-  }
+  users: {
+    id: string,
+    name: string,
+    email: string,
+    password: string,
+    role: string,
+    avatar: string,
+    createAt: string,
+    updateAt: string,
+  }[]
+}
 const users = gql`#prepend
   query getUser{
     users {
@@ -46,7 +47,7 @@ const users = gql`#prepend
       updateAt
     }
   }`
+watch(data.getUsers, (val: any) => data.getUsers = val)
+data.getUsers = await useAsyncQuery<any>(users).data.value?.users
 
-const getUsers = useAsyncQuery<typeUsers>(users).data.value
-console.log('data', getUsers?.users)
 </script>
