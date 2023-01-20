@@ -4,6 +4,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+useAsyncData()
 
 const data = reactive({
   getUsers: [],

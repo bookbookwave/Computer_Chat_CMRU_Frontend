@@ -9,6 +9,7 @@
     "lint": "eslint --ext .ts,.js,.vue ."
   },
   "devDependencies": {
+    "@nuxtjs/apollo": "^5.0.0-alpha.5",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@typescript-eslint/eslint-plugin": "^5.48.2",
@@ -25,6 +26,8 @@
   "dependencies": {
     "@mdi/font": "^7.1.96",
     "eslint": "^8.32.0",
+    "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
     "nuxt-socket-io": "^3.0.12",
     "sass": "^1.57.1",
     "typescript": "^4.9.4",
