@@ -8,7 +8,7 @@ await queryDatabase({
     useRouter().push('/welcome')
   },
   onError: (error: Error) => {
-    console.log('error :>> ', error)
+    console.error('error :>> ', error)
   }
 })
 definePageMeta({

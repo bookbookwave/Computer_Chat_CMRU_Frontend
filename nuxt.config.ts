@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   modules: [
     'nuxt-socket-io',
-    '@nuxtjs/apollo',
+    'apollo-client',
     ['@pinia/nuxt',
       {
         autoImports: [

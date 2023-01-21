@@ -34,7 +34,7 @@
                 placeholder="Pick an avatar"
                 prepend-icon="mdi-camera"
                 label="Avatar"
-                @change="avatarFile($event)"
+                @change="handleSelectAvatar($event)"
               />
             </v-col>
           </v-row>
@@ -53,7 +53,9 @@
     </v-card>
   </v-dialog>
 </template>
-<script lang="ts" setup>import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
+
+<script lang="ts" setup>
+import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
 
 const data = reactive({
   dialog: false,
@@ -67,33 +69,35 @@ const data = reactive({
   password: '',
   confirmPassword: '',
   role: '',
-  avatar: []
-
+  avatar: null
 })
-const image = ref()
-const avatarFile = (value:any) => {
-  const file = { value: value.target.files[0] }
-  const formData = new FormData()
-  formData.append('file', file.value)
-  console.log(formData)
-  image.value = formData
-  console.log('image.value :>> ', image.value)
+
+const handleSelectAvatar = (event:any) => {
+  data.avatar = event.target.files[0]
+  console.log(data.avatar)
 }
+
 const onSubmit = () => {
-  const value = {
-    name: data.name,
-    email: data.email,
-    password: data.password,
-    confirmPassword: data.confirmPassword,
-    role: data.role,
-    avatar: image.value
-  }
+  // const value = {
+  //   name: data.name,
+  //   email: data.email,
+  //   password: data.password,
+  //   confirmPassword: data.confirmPassword,
+  //   role: data.role,
+  //   avatar: data.avatar
+  // }
+  // console.log('value :>> ', value)
+
+  // const formData = new FormData()
+
+  // formData.append('avatar', data.avatar ?? '')
+
   mutationsDatabase().createUser({
     onResult: () => {
       data.dialog = false
     },
     onError: () => {},
-    value
+    value: data
   })
 }
 const props2 = defineProps({

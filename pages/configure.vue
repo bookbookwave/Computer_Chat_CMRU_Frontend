@@ -34,6 +34,13 @@ query getUser{
 // if (getUsers.data.value?.users) {
 //   console.log('aaa', getUsers.data.value)
 // }
+await queryDatabase({
+  onResult: () => {
+  },
+  onError: (error: Error) => {
+    console.error('error :>> ', error)
+  }
+})
 const data = await useCounter().users
 console.log(await data)
 </script>

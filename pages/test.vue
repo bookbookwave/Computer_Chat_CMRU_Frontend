@@ -69,7 +69,8 @@
     </v-data-table>
   </div>
 </template>
-<script lang="ts" setup>import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
+<script lang="ts" setup>
+import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
 import queryDatabase from '~~/libs/query/queryDatabase'
 import { useCounter } from '~~/store/queryData'
 
@@ -87,7 +88,15 @@ const data = reactive({
     { title: 'updateAt', key: 'updateAt' },
     { title: 'Actions', key: 'actions', sortable: false }
   ],
-  editedIndex: -1
+  editedIndex: -1,
+  deleteIndex: ''
+})
+await queryDatabase({
+  onResult: () => {
+  },
+  onError: (error: Error) => {
+    console.error('error :>> ', error)
+  }
 })
 const users = await useCounter().users
 
@@ -104,12 +113,14 @@ const editItem = (item: any) => {
 
 const deleteItem = (item: any) => {
   console.log(item)
+  data.deleteIndex = item.id
   data.editedIndex = users!.indexOf(item)
   data.editedItem = Object.assign({}, item)
   data.dialogDelete = true
 }
 
-const deleteItemConfirm = () => {
+const deleteItemConfirm = (item:any) => {
+  mutationsDatabase().deleteUser({ onResult: (res:any) => { console.log(res) }, value: data.deleteIndex })
   users!.splice(data.editedIndex, 1)
   closeDelete()
 }

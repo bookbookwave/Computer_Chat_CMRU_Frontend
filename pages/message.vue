@@ -1,8 +1,11 @@
 <template>
   <div class="h-fit">
     <input v-model="data.username" autocomplete="off" class="bg-white text-[#000] border-[#000]">
-    <div v-for="(msg, index) in data.messages" :key="index"
-      :class="['message text-[#fff]', msg.userId === data.username ? 'text-right' : 'text-left']">
+    <div
+      v-for="(msg, index) in data.messages"
+      :key="index"
+      :class="['message text-[#fff]', msg.userId === data.username ? 'text-right' : 'text-left']"
+    >
       {{ msg.msg }}
     </div>
     <form @submit.prevent="sendMessage">
@@ -36,7 +39,7 @@ const sendMessage = () => {
   data.message = ''
 }
 // onUnmounted(() => useRouter().push('/'))
-const intervalId = ref();
+const intervalId = ref()
 onBeforeMount(() => { console.log('hello') })
 onMounted(() => {
   console.log('Component mounted')

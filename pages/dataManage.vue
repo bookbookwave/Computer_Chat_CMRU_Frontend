@@ -4,6 +4,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import queryDatabase from '~~/libs/query/queryDatabase';
 import { useCounter } from '~~/store/queryData'
 import { User } from '~~/types/graphql'
 
@@ -48,6 +49,13 @@ const data = reactive({
 //     }
 //   }`
 // watch(data.getUsers, (val: any) => data.getUsers = val)
+await queryDatabase({
+  onResult: () => {
+  },
+  onError: (error: Error) => {
+    console.error('error :>> ', error)
+  }
+})
 const getUsers = useCounter().users
 
 </script>

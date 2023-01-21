@@ -1,17 +1,10 @@
-import { REGISTER } from '~~/apollo/mutation'
+import { DELETE_USER, REGISTER } from '~~/apollo/mutation'
 
 const mutationsDatabase = () => {
   const createUser = async ({ onResult, onError, value }:any) => {
     try {
-      const variables = {
-        name: value.name,
-        email: value.email,
-        password: value.password,
-        confirmPassword: value.confirmPassword,
-        avatar: value.avatar
-      }
-      console.log('value.avatar :>> ', value.avatar)
-      const data = await useMutation(REGISTER).mutate(variables)
+      console.log('value.avatar :>> ', value)
+      const data = await useMutation(REGISTER).mutate(value)
       onResult(data)
     } catch (error) {
       onError(error)
@@ -41,16 +34,16 @@ const mutationsDatabase = () => {
     const data = await useMutation(updateUser).mutate(variables)
     return data?.data
   }
-  const deleteUser = async () => {
-    const deleteUser = gql`
-    mutation deleteUser($id:String!){
-  deleteUser(id: "string")
-}`
-    const variables = {
-      id: ''
+  const deleteUser = async ({ onResult, onError, value }:any) => {
+    try {
+      const variables = {
+        id: value
+      }
+      const res = await useMutation(DELETE_USER).mutate(variables)
+      onResult(res)
+    } catch (error) {
+      onError(error)
     }
-    const res = await useMutation(deleteUser).mutate(variables)
-    console.log('res', res)
   }
   return { createUser, updateUser, deleteUser }
 }
