@@ -1,15 +1,8 @@
 <template>
   <div class="h-fit">
-    <input
-      v-model="data.username"
-      autocomplete="off"
-      class="bg-white text-[#000] border-[#000]"
-    >
-    <div
-      v-for="(msg, index) in data.messages"
-      :key="index"
-      :class="['message text-[#fff]',msg.userId === data.username ? 'text-right' : 'text-left']"
-    >
+    <input v-model="data.username" autocomplete="off" class="bg-white text-[#000] border-[#000]">
+    <div v-for="(msg, index) in data.messages" :key="index"
+      :class="['message text-[#fff]', msg.userId === data.username ? 'text-right' : 'text-left']">
       {{ msg.msg }}
     </div>
     <form @submit.prevent="sendMessage">
@@ -33,7 +26,7 @@ const data = reactive({
   messages: ref<any[]>([])
 })
 onMounted(() => {
-  socket.on('message', (msgBody :any) => {
+  socket.on('message', (msgBody: any) => {
     data.messages.push(msgBody)
     console.log(data.messages)
   })
@@ -42,5 +35,13 @@ const sendMessage = () => {
   socket.emit('message', { userId: data.username, msg: data.message })
   data.message = ''
 }
-
+// onUnmounted(() => useRouter().push('/'))
+const intervalId = ref();
+onBeforeMount(() => { console.log('hello') })
+onMounted(() => {
+  console.log('Component mounted')
+})
+onUnmounted(() => {
+  console.log('Component unmounted')
+})
 </script>

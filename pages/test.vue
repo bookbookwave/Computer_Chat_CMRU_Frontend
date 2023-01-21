@@ -1,124 +1,30 @@
 <template>
   <!-- <div v-if="data.loading" /> -->
   <div>
-    <v-data-table
-      :headers="data.headers"
-      :items="getUsers"
-      class="elevation-1"
-      :search="data.search"
-    >
+    <v-data-table :headers="data.headers" :items="users" class="elevation-1" :search="data.search">
       <template #top>
-        <v-toolbar
-          flat
-        >
-          <v-toolbar-title>My CRUD</v-toolbar-title>
-          <v-divider
-            class="mx-4"
-            inset
-            vertical
-          />
-          <v-spacer />
-          <button-form-dialog-button text-dialog="Add User" />
-          <!-- <v-dialog
-            v-model="data.dialog"
-            max-width="500px"
-          >
-            <template #activator="{ props }">
-              <v-btn
-                color="primary"
-                dark
-                class="mb-2"
-                v-bind="props"
-              >
-                New Item
-              </v-btn>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
-              </v-card-title>
-
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="data.editedItem.name"
-                        label="Dessert name"
-                      />
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="data.editedItem.calories"
-                        label="Calories"
-                      />
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="data.editedItem.fat"
-                        label="Fat (g)"
-                      />
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="data.editedItem.carbs"
-                        label="Carbs (g)"
-                      />
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="data.editedItem.protein"
-                        label="Protein (g)"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-spacer />
-                <v-btn
-                  color="blue-darken-1"
-                  variant="text"
-                  @click="close"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  color="blue-darken-1"
-                  variant="text"
-                  @click="save"
-                >
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
+        <v-toolbar flat>
+          <div class="grid grid-cols-3 md:grid-cols-6 min-w-full min-h-full align-center">
+            <v-toolbar-title class="relative col-start-1 text-center">
+              Users
+            </v-toolbar-title>
+            <v-divider
+              class="mx-4"
+              inset
+              vertical
+            />
+            <div class="relative col-start-3 md:col-start-6">
+              <button-form-dialog-button text-dialog="Add User" />
+            </div>
+          </div>
           <v-dialog v-model="data.dialogDelete" max-width="500px">
             <v-card>
-              <v-card-title class="text-h5">
-                Are you sure you want to delete this item?
+              <v-card-title class="d-flex justify-center text-subtitle-2 font-Kanit">
+                Are you sure you want to
+                <div class="text-red mx-1">
+                  delete
+                </div>
+                this item?
               </v-card-title>
               <v-card-actions>
                 <v-spacer />
@@ -131,7 +37,7 @@
                 <v-spacer />
               </v-card-actions>
             </v-card>
-          </v-dialog> -->
+          </v-dialog>
         </v-toolbar>
         <v-text-field
           v-model="data.search"
@@ -143,22 +49,15 @@
         />
       </template>
       <template #[`item.actions`]="{ item }">
-        <v-icon
-          size="small"
-          class="mr-2"
-          @click="editItem(item.raw)"
-        >
+        <v-icon size="small" color="yellow" class="mr-2" @click="editItem(item.raw)">
           mdi-pencil
         </v-icon>
-        <v-icon
-          size="small"
-          @click="deleteItem(item.raw)"
-        >
+        <v-icon size="small" color="red" @click="deleteItem(item.raw)">
           mdi-delete
         </v-icon>
       </template>
       <template #no-data>
-        <div class="text-center">
+        <div class="flex justify-center">
           no data
         </div>
       </template>
@@ -172,6 +71,7 @@
 </template>
 <script lang="ts" setup>import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
 import queryDatabase from '~~/libs/query/queryDatabase'
+import { useCounter } from '~~/store/queryData'
 
 const data = reactive({
   dialog: false,
@@ -187,52 +87,30 @@ const data = reactive({
     { title: 'updateAt', key: 'updateAt' },
     { title: 'Actions', key: 'actions', sortable: false }
   ],
-  editedIndex: -1,
-  editedItem: {
-    name: '',
-    calories: 0,
-    fat: 0,
-    carbs: 0,
-    protein: 0
-  },
-  defaultItem: {
-    name: '',
-    calories: 0,
-    fat: 0,
-    carbs: 0,
-    protein: 0
-  }
+  editedIndex: -1
 })
-const updated = await mutationsDatabase().updateUserMutation()
-
-const getUsers = await queryDatabase().getUsers()
-
-if (getUsers !== undefined) {
-  data.loading = false
-}
-
-console.log('datassss', getUsers)
-console.log('update', updated)
+const users = await useCounter().users
 
 const formTitle = data.editedIndex === -1 ? 'New Item' : 'Edit Item'
 
 watch(() => data.dialog, (val: any) => val || close())
 watch(() => data.dialogDelete, (val: any) => val || close())
 
-const editItem = (item :any) => {
-  data.editedIndex = getUsers!.indexOf(item)
+const editItem = (item: any) => {
+  data.editedIndex = users!.indexOf(item)
   data.editedItem = Object.assign({}, item)
   data.dialog = true
 }
 
-const deleteItem = (item :any) => {
-  data.editedIndex = getUsers!.indexOf(item)
+const deleteItem = (item: any) => {
+  console.log(item)
+  data.editedIndex = users!.indexOf(item)
   data.editedItem = Object.assign({}, item)
   data.dialogDelete = true
 }
 
 const deleteItemConfirm = () => {
-  getUsers!.splice(data.editedIndex, 1)
+  users!.splice(data.editedIndex, 1)
   closeDelete()
 }
 
@@ -254,13 +132,13 @@ const closeDelete = () => {
 
 const save = () => {
   if (data.editedIndex > -1) {
-    Object.assign(getUsers![data.editedIndex], data.editedItem)
+    Object.assign(users![data.editedIndex], data.editedItem)
   } else {
-    getUsers!.push(data.editedItem)
+    users!.push(data.editedItem)
   }
   close()
 }
-const getColor = (role : any) => {
+const getColor = (role: any) => {
   if (role === 'ADMIN') { return 'red' } else if (role === 'TEACHER') { return 'orange' } else { return 'green' }
 }
 </script>

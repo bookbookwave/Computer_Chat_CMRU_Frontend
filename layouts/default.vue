@@ -2,11 +2,9 @@
   <v-app light>
     <v-card>
       <v-layout class="min-h-screen">
-        <v-app-bar
-          color="dark"
-        >
+        <v-app-bar color="dark">
           <template #prepend>
-            <v-app-bar-nav-icon @click="data.rail = !data.rail" />
+            <v-app-bar-nav-icon @click="data.drawer = !data.drawer" />
           </template>
 
           <v-app-bar-title>Title</v-app-bar-title>
@@ -25,31 +23,14 @@
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </v-app-bar>
-        <v-navigation-drawer
-          v-model="data.drawer"
-          :rail="data.rail"
-          permanent
-          @click="data.rail = false"
-        >
-          <v-list-item
-            prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-            title="John Leider"
-            nav
-          />
+        <v-navigation-drawer v-model="data.drawer" temporary>
+          <v-list-item prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg" title="John Leider" nav />
 
           <v-divider />
 
           <v-list density="compact" nav>
-            <v-list-item
-              v-for="(item, i) in data.items"
-              :key="i"
-              exact
-              :to="item.to"
-              :prepend-icon="item.icon"
-              :title="item.title"
-              :value="i"
-              @click="data.rail = !data.rail"
-            />
+            <v-list-item v-for="(item, i) in data.items" :key="i" exact :to="item.to" :prepend-icon="item.icon"
+              :title="item.title" :value="i" @click="data.rail = !data.rail" />
           </v-list>
         </v-navigation-drawer>
 
@@ -73,14 +54,14 @@
 const data = reactive({
 
   clipped: false,
-  drawer: true,
+  drawer: false,
   fixed: false,
   rail: false,
   items: [
     {
       icon: 'mdi-apps',
       title: 'Welcome',
-      to: '/'
+      to: '/welcome'
     },
     {
       icon: 'mdi-chart-bubble',

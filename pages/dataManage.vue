@@ -1,14 +1,14 @@
 <template>
   <div class="overflow-auto">
-    <ContainerConfigTable :items="data.getUsers" :headers="data.headers" title="User" text-button="Add User" />
+    <ContainerConfigTable :items="getUsers" :headers="data.headers" title="User" text-button="Add User" />
   </div>
 </template>
 <script lang="ts" setup>
-import { User } from '~~/types/graphql';
-
+import { useCounter } from '~~/store/queryData'
+import { User } from '~~/types/graphql'
 
 const data = reactive({
-  getUsers: [],
+  getUsers: Array<User>,
   search: '',
   headers: [
     { title: 'ID', key: 'id' },
@@ -22,32 +22,32 @@ const data = reactive({
   ]
 
 })
-type typeUsers = {
-  users: {
-    id: string,
-    name: string,
-    email: string,
-    password: string,
-    role: string,
-    avatar: string,
-    createAt: string,
-    updateAt: string,
-  }[]
-}
-const users = gql`#prepend
-  query getUser{
-    users {
-      id
-      name
-      email
-      password
-      role
-      avatar
-      createAt
-      updateAt
-    }
-  }`
-watch(data.getUsers, (val: any) => data.getUsers = val)
-data.getUsers = await useAsyncQuery<any>(users).data.value?.users
+// type typeUsers = {
+//   users: {
+//     id: string,
+//     name: string,
+//     email: string,
+//     password: string,
+//     role: string,
+//     avatar: string,
+//     createAt: string,
+//     updateAt: string,
+//   }[]
+// }
+// const users = gql`#prepend
+//   query getUser{
+//     users {
+//       id
+//       name
+//       email
+//       password
+//       role
+//       avatar
+//       createAt
+//       updateAt
+//     }
+//   }`
+// watch(data.getUsers, (val: any) => data.getUsers = val)
+const getUsers = useCounter().users
 
 </script>
