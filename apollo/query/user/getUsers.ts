@@ -1,10 +1,10 @@
 export default gql`#prepend
-query {
+query getUser{
   users {
     id
     name
     email
-    password
+    # password
     role
     avatar
     createAt

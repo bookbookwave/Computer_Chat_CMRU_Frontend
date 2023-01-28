@@ -1,50 +1,68 @@
 <template>
   <div class="h-fit">
-    <input v-model="data.username" autocomplete="off" class="bg-white text-[#000] border-[#000]">
     <div
       v-for="(msg, index) in data.messages"
       :key="index"
       :class="['message text-[#fff]', msg.userId === data.username ? 'text-right' : 'text-left']"
     >
-      {{ msg.msg }}
+      <v-chip
+        class="ma-2"
+        color="primary"
+      >
+        {{ msg.msg }}
+      </v-chip>
     </div>
-    <form @submit.prevent="sendMessage">
-      <input ref="input" v-model="data.message" class="terminal-input bg-white text-[#000] border-[#000]" autofocus>
-      <button class="btn" type="button" @click="sendMessage">
-        Send
-      </button>
-    </form>
-    <v-bottom-navigation />
-    <ContainerSnackBar />
+    <v-bottom-navigation>
+      <form class="flex min-w-full" @submit.prevent="sendMessage">
+        <v-text-field
+          ref="input"
+          v-model="data.message"
+          label="Message"
+          placeholder="What do you think?"
+        />
+        <v-btn value="recent1">
+          <v-icon>mdi-attachment</v-icon>
+        </v-btn>
+        <v-btn value="recent2" @click="sendMessage">
+          <v-icon>mdi-send</v-icon>
+        </v-btn>
+      </form>
+    </v-bottom-navigation>
+    <!-- <ContainerSnackBar /> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import socket from '../plugins/socket.io'
+import { useEnv } from '~~/store/environment'
+import { useProfile } from '~~/store/profile'
 
 const data = reactive({
-  userId: 'Wave',
+  host: useEnv().BACKEND_API_URL,
   message: '',
-  username: '',
+  username: useProfile().name,
   messages: ref<any[]>([])
 })
+
+// const socket = socketQuery('cldekl9yf0006i1czhbjpky1c').connect()
 onMounted(() => {
+  socket.connect()
+  // socket.emit('join', { data: 'cldekl9yf0006i1czhbjpky1c' })
+  socket.on('connection', (socket) => {
+    data.messages.push({ msg: socket })
+  })
+  socket.on('disconnect', (socket) => {
+    data.messages.push({ msg: socket })
+  })
   socket.on('message', (msgBody: any) => {
     data.messages.push(msgBody)
-    console.log(data.messages)
   })
 })
 const sendMessage = () => {
-  socket.emit('message', { userId: data.username, msg: data.message })
-  data.message = ''
+  if (data.message !== '') {
+    socket.emit('message', { userId: data.username, msg: data.message })
+    data.message = ''
+  }
 }
-// onUnmounted(() => useRouter().push('/'))
-const intervalId = ref()
-onBeforeMount(() => { console.log('hello') })
-onMounted(() => {
-  console.log('Component mounted')
-})
-onUnmounted(() => {
-  console.log('Component unmounted')
-})
+
 </script>

@@ -1,18 +1,34 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-export const useCounter = defineStore('StoreDatabase', {
+export const useQueryStore = defineStore('useQueryStore', {
   state: () => ({
-    users: []
+    users: [],
+    projects: [],
+    status: [],
+    projectType: [],
+    projectById: []
   }),
   getters: {
 
   },
   actions: {
-    setUser(users) {
+    setUser (users) {
       this.users = users
+    },
+    setProject (projects) {
+      this.projects = projects
+    },
+    setStatus (status) {
+      this.status = status
+    },
+    setProjectType (type) {
+      this.projectType = type
+    },
+    setProjectById (projectId) {
+      this.projectById = projectId
     }
   }
 })
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useCounter, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useQueryStore, import.meta.hot))
 }

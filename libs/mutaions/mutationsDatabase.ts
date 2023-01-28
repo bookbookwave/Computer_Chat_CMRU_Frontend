@@ -1,38 +1,40 @@
-import { DELETE_USER, REGISTER } from '~~/apollo/mutation'
+import { CREATE_PROJECT, CREATE_PROJECT_TYPES, CREATE_STATUS, CREATE_USER, CREATE_USER_PROJECT, DELETE_PROJECT, DELETE_PROJECT_TYPES, DELETE_STATUS, DELETE_USER, LOGIN, REGISTER, UPDATE_PROJECT, UPDATE_PROJECT_TYPES, UPDATE_STATUS, UPDATE_USER } from '~~/apollo/mutation'
 
 const mutationsDatabase = () => {
-  const createUser = async ({ onResult, onError, value }:any) => {
+  const login = async ({ onResult, onError, value }:any) => {
     try {
-      console.log('value.avatar :>> ', value)
+      const data = await useMutation(LOGIN).mutate(value)
+      useCookie('token').value = JSON.stringify(data)
+      onResult(data)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const register = async ({ onResult, onError, value }:any) => {
+    try {
       const data = await useMutation(REGISTER).mutate(value)
       onResult(data)
     } catch (error) {
       onError(error)
     }
   }
-  const updateUser = async () => {
-    const updateUser = gql`
-    mutation updateUser($id: String, $name: String! ,$email: String! ,$password: String!) {
-        updateUser(input: { id:$id name: $name, email: $email, password: $password}) {
-    id
-    name
-    email
-    password
-    role
-    avatar
-    createAt
-    updateAt
-  }
-    }`
-    const variables = {
-      id: 'clcx7v3d30000i163w6hn0n00',
-      name: 'wave jjjjj',
-      email: 'hhhh@gmail.com',
-      password: '12345'
+  const createUser = async ({ onResult, onError, value }:any) => {
+    try {
+      const data = await useMutation(CREATE_USER).mutate(value)
+      onResult(data)
+    } catch (error) {
+      onError(error)
     }
-
-    const data = await useMutation(updateUser).mutate(variables)
-    return data?.data
+  }
+  const updateUser = async (
+    { onResult, onError, value }:any
+  ) => {
+    try {
+      const data = await useMutation(UPDATE_USER).mutate(value)
+      onResult(data)
+    } catch (error) {
+      onError(error)
+    }
   }
   const deleteUser = async ({ onResult, onError, value }:any) => {
     try {
@@ -45,6 +47,111 @@ const mutationsDatabase = () => {
       onError(error)
     }
   }
-  return { createUser, updateUser, deleteUser }
+  const createStatus = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(CREATE_STATUS).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const updateStatus = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(UPDATE_STATUS).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const deleteStatus = async ({ onResult, onError, value }:any) => {
+    try {
+      const variables = {
+        id: value
+      }
+      const res = await useMutation(DELETE_STATUS).mutate(variables)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const createProjectTypes = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(CREATE_PROJECT_TYPES).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const updateProjectTypes = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(UPDATE_PROJECT_TYPES).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const deleteProjectTypes = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(DELETE_PROJECT_TYPES).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const createProject = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(CREATE_PROJECT).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const updateProject = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(UPDATE_PROJECT).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const deleteProject = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(DELETE_PROJECT).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const createUserProject = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(CREATE_USER_PROJECT).mutate({ data: value })
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+
+  return {
+    login,
+    register,
+
+    createUser,
+    updateUser,
+    deleteUser,
+
+    createStatus,
+    updateStatus,
+    deleteStatus,
+
+    createProjectTypes,
+    updateProjectTypes,
+    deleteProjectTypes,
+
+    createProject,
+    updateProject,
+    deleteProject,
+
+    createUserProject
+  }
 }
 export default mutationsDatabase

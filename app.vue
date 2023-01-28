@@ -1,8 +1,6 @@
 <template>
   <NuxtLayout class="font-Kanit">
-    <div>
-      <NuxtPage />
-      <!-- <NuxtWelcome /> -->
-    </div>
+    <NuxtPage />
+    <!-- <NuxtWelcome /> -->
   </NuxtLayout>
 </template>

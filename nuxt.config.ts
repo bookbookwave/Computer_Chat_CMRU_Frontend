@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   modules: [
     'nuxt-socket-io',
     '@nuxtjs/apollo',
+    '@nuxtjs/tailwindcss',
     ['@pinia/nuxt',
       {
         autoImports: [
@@ -33,8 +34,10 @@ export default defineNuxtConfig({
   },
   apollo: {
     clients: {
-      default: {
-        httpEndpoint: 'http://localhost:3000/graphql'
+      default:
+      {
+        httpEndpoint: 'http://localhost:3000/graphql',
+        inMemoryCacheOptions: {}
       }
     }
   }

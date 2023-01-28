@@ -42,7 +42,9 @@
 //     }[]
 //   }
 // }
-const image = 'http://localhost:3000/images/-tG2dfFH8-84658493_p0.png'
+
+import { useEnv } from '~~/store/environment'
+const image = `${useEnv().BACKEND_API_URL}/images/-tG2dfFH8-84658493_p0.png`
 
 // const ricky = gql`
 // query getCharacters {

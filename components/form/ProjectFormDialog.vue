@@ -1,0 +1,192 @@
+<template>
+  <v-no-ssr>
+    <v-card>
+      <v-card-title class="pa-5">
+        <span class="text-h5">{{ props2.textDialog }}</span>
+      </v-card-title>
+      <v-card-text>
+        <v-container>
+          <v-row>
+            <v-col cols="12" sm="12" md="12">
+              <v-text-field v-model="data.nameTH" label="Full Thai Project name*" hint="Thai name" persistent-hint required />
+            </v-col>
+            <v-col cols="12" sm="12" md="12">
+              <v-text-field v-model="data.nameEN" label="Full English Project name*" hint="English name" persistent-hint required />
+            </v-col>
+            <v-col cols="12" sm="6">
+              <v-autocomplete
+                v-model="data.selectUser"
+                :items="users"
+                chips
+                closable-chips
+                color="blue-grey-lighten-2"
+                item-title="name"
+                item-value="name"
+                label="Select Person"
+                multiple
+                hint="Don't forget, add yourself*"
+              >
+                <template #chip="{ props, item }">
+                  <v-chip
+                    v-bind="props"
+                    :prepend-avatar="`${(item.raw.avatar as string).startsWith('http') ? 'https://picsum.photos/300/300': `http://localhost:3000/images/${item.raw.avatar}` }`"
+                    :text="item.raw.name"
+                  />
+                </template>
+
+                <template #item="{ props, item }">
+                  <v-list-item
+                    hide-selected
+                    :prepend-avatar="`${(item.raw.avatar as string).startsWith('http') ? 'https://picsum.photos/300/300': `http://localhost:3000/images/${item.raw.avatar}` }`"
+                    v-bind="props"
+                    :title="item?.raw?.name"
+                  />
+                  <!-- <v-checkbox :label="item?.raw?.name" v-bind="props" /> -->
+                </template>
+              </v-autocomplete>
+            </v-col>
+            <v-col cols="12" sm="6">
+              <v-autocomplete
+                v-model="data.status"
+                :items="status"
+                :value="data.status"
+                :disabled="data.role === 'USER'"
+                color="blue-grey-lighten-2"
+                item-title="name"
+                item-value="name"
+                label="Project Status"
+              >
+                <template #item="{ props, item }">
+                  <v-list-item
+                    v-bind="props"
+                    :title="item?.raw?.name"
+                  />
+                </template>
+              </v-autocomplete>
+            </v-col>
+            <v-col cols="12" sm="12">
+              <v-autocomplete
+                v-model="data.type"
+                :items="types"
+                color="blue-grey-lighten-2"
+                item-title="name"
+                item-value="name"
+                label="Project Type"
+              >
+                <template #item="{ props, item }">
+                  <v-list-item
+                    v-bind="props"
+                    :title="item?.raw?.name"
+                  />
+                </template>
+              </v-autocomplete>
+            </v-col>
+          </v-row>
+        </v-container>
+        <small>*indicates required field</small>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn color="blue-darken-1" variant="text" @click="closeDialog">
+          Close
+        </v-btn>
+        <v-btn color="blue-darken-1" variant="text" @click="onSubmit">
+          Save
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-no-ssr>
+</template>
+
+<script lang="ts" setup>
+import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
+import queryDatabase from '~~/libs/query/queryDatabase'
+import { useProfile } from '~~/store/profile'
+import { useQueryStore } from '~~/store/queryData'
+
+  enum Role {
+    ADMIN = 'ADMIN',
+    TEACHER = 'TEACHER',
+    USER = 'USER'
+  }
+const props2 = defineProps({
+  textDialog: { type: String, default: '' },
+  value: { type: Array, default: () => [] }
+})
+const data = reactive({
+  dialog: false,
+  rules: [
+    (value: any) => {
+      return !value || !value.length || value[0].size < 2000000 || 'Avatar size should be less than 2 MB!'
+    }
+  ],
+  role: useProfile().role,
+  id: '',
+  name: '',
+  nameTH: '',
+  nameEN: '',
+  selectUser: [],
+  timeout: null,
+  type: '',
+  status: ''
+})
+if (props2.value !== undefined) {
+  data.nameTH = props2.value.nameTH
+  data.nameEN = props2.value.nameEN
+  data.status = props2.value.status
+  data.type = props2.value.projectType
+}
+const users = await useQueryStore().users
+const types = await useQueryStore().projectType
+const status = await useQueryStore().status
+data.status = status[0].name
+
+const emit = defineEmits(['dialogFalse'])
+const closeDialog = () => {
+  emit('dialogFalse')
+}
+
+const onSubmit = () => {
+  const newStatus = status.filter(val => val.name === data.status)[0].id
+  const newType = types.filter(val => val.name === data.type)[0].id
+  const value = []
+
+  // for (let i = 0; i < data.selectUser.length; i++) {
+  //   const newUser = users.filter(val => val.name === data.selectUser[i])[0].id
+  //   value.push({ userId: newUser, projectId })
+  // }
+
+  if (props2.textDialog === 'New') {
+    mutationsDatabase().createProject({
+      onResult: (res :any) => {
+        const value = data.selectUser.map((userName :any) => {
+          const newUser = users.find(val => val.name === userName)
+          return { userId: newUser.id, projectId: res.data.createProject?.id }
+        })
+        mutationsDatabase().createUserProject({
+          onResult: () => {
+            window.location.reload()
+          },
+          onError: () => {},
+          value
+        })
+        data.dialog = false
+        emit('dialogFalse')
+      },
+      onError: () => {},
+      value: { ...data, statusId: newStatus, typeId: newType }
+    })
+  } else {
+    mutationsDatabase().updateProject({
+      onResult: () => {
+        window.location.reload()
+        queryDatabase({})
+        data.dialog = false
+        emit('dialogFalse')
+      },
+      onError: () => {},
+      value: { ...data, statusId: newStatus, typeId: newType }
+    })
+  }
+}
+</script>

@@ -1,5 +1,5 @@
 export default gql`
-mutation register($avatar: Upload,$name: String!,$email: String!,$password: String!,$confirmPassword: String!) {
+mutation register($avatar: String,$name: String!,$email: String!,$password: String!,$confirmPassword: String!) {
     register(
       input: {
         name: $name

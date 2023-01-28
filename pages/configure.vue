@@ -3,37 +3,11 @@
 </template>
 <script lang="ts" setup>
 import queryDatabase from '~~/libs/query/queryDatabase'
-import { useCounter } from '~~/store/queryData'
-
-type typeUsers = {
-  users: {
-    id: string,
-    name: string,
-    email: string,
-    password: string,
-    role: string,
-    avatar: string,
-    createAt: string,
-    updateAt: string,
-  }
+import { useProfile } from '~~/store/profile'
+import { useQueryStore } from '~~/store/queryData'
+if (useProfile().role === 'USER' || useProfile().role === 'TEACHER') {
+  useRouter().push('/welcome')
 }
-const users = gql`
-query getUser{
-  users {
-    id
-    name
-    email
-    password
-    role
-    avatar
-    createAt
-    updateAt
-  }
-}`
-// const getUsers = await queryDatabase().getUsers()
-// if (getUsers.data.value?.users) {
-//   console.log('aaa', getUsers.data.value)
-// }
 await queryDatabase({
   onResult: () => {
   },
@@ -41,6 +15,5 @@ await queryDatabase({
     console.error('error :>> ', error)
   }
 })
-const data = await useCounter().users
-console.log(await data)
+const data = await useQueryStore().users
 </script>

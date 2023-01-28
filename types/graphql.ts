@@ -11,7 +11,6 @@ export type Scalars = {
   Int: number;
   Float: number;
   DateTime: any;
-  Upload: any;
 };
 
 export type Banner = {
@@ -38,7 +37,7 @@ export type BannerCountAggregate = {
 export type BannerCreateInput = {
   createAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  image: Scalars['Upload'];
+  image: Scalars['String'];
   link?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
   updateAt?: InputMaybe<Scalars['DateTime']>;
@@ -253,7 +252,7 @@ export type DownloadCreateManyAuthorInput = {
   downloadCategoryId: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
   link: Scalars['String'];
-  thumbnail?: InputMaybe<Scalars['Upload']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -267,7 +266,7 @@ export type DownloadCreateManyDownloadCategoryInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   link: Scalars['String'];
-  thumbnail?: InputMaybe<Scalars['Upload']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   userId: Scalars['String'];
 };
@@ -307,7 +306,7 @@ export type DownloadCreateWithoutAuthorInput = {
   downloadCategory: DownloadCategoryCreateNestedOneWithoutDownloadInput;
   id?: InputMaybe<Scalars['String']>;
   link: Scalars['String'];
-  thumbnail?: InputMaybe<Scalars['Upload']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -317,7 +316,7 @@ export type DownloadCreateWithoutDownloadCategoryInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   link: Scalars['String'];
-  thumbnail?: InputMaybe<Scalars['Upload']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -356,7 +355,7 @@ export type DownloadUncheckedCreateInput = {
   downloadCategoryId: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
   link: Scalars['String'];
-  thumbnail?: InputMaybe<Scalars['Upload']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   userId: Scalars['String'];
 };
@@ -372,6 +371,247 @@ export type DownloadWhereUniqueInput = {
   id?: InputMaybe<Scalars['String']>;
 };
 
+export type Message = {
+  __typename?: 'Message';
+  author: User;
+  id: Scalars['ID'];
+  message: Scalars['String'];
+  room: MessageRoom;
+  roomID: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type MessageCountAggregate = {
+  __typename?: 'MessageCountAggregate';
+  _all: Scalars['Int'];
+  id: Scalars['Int'];
+  message: Scalars['Int'];
+  roomID: Scalars['Int'];
+  userId: Scalars['Int'];
+};
+
+export type MessageCreateManyAuthorInput = {
+  id?: InputMaybe<Scalars['String']>;
+  message: Scalars['String'];
+  roomID: Scalars['String'];
+};
+
+export type MessageCreateManyAuthorInputEnvelope = {
+  data: Array<MessageCreateManyAuthorInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type MessageCreateManyRoomInput = {
+  id?: InputMaybe<Scalars['String']>;
+  message: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type MessageCreateManyRoomInputEnvelope = {
+  data: Array<MessageCreateManyRoomInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type MessageCreateNestedManyWithoutAuthorInput = {
+  connect?: InputMaybe<Array<MessageWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<MessageCreateOrConnectWithoutAuthorInput>>;
+  create?: InputMaybe<Array<MessageCreateWithoutAuthorInput>>;
+  createMany?: InputMaybe<MessageCreateManyAuthorInputEnvelope>;
+};
+
+export type MessageCreateNestedManyWithoutRoomInput = {
+  connect?: InputMaybe<Array<MessageWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<MessageCreateOrConnectWithoutRoomInput>>;
+  create?: InputMaybe<Array<MessageCreateWithoutRoomInput>>;
+  createMany?: InputMaybe<MessageCreateManyRoomInputEnvelope>;
+};
+
+export type MessageCreateOrConnectWithoutAuthorInput = {
+  create: MessageCreateWithoutAuthorInput;
+  where: MessageWhereUniqueInput;
+};
+
+export type MessageCreateOrConnectWithoutRoomInput = {
+  create: MessageCreateWithoutRoomInput;
+  where: MessageWhereUniqueInput;
+};
+
+export type MessageCreateWithoutAuthorInput = {
+  id?: InputMaybe<Scalars['String']>;
+  message: Scalars['String'];
+  room: MessageRoomCreateNestedOneWithoutMessageInput;
+};
+
+export type MessageCreateWithoutRoomInput = {
+  author: UserCreateNestedOneWithoutMessageInput;
+  id?: InputMaybe<Scalars['String']>;
+  message: Scalars['String'];
+};
+
+export type MessageMaxAggregate = {
+  __typename?: 'MessageMaxAggregate';
+  id?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  roomID?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export type MessageMinAggregate = {
+  __typename?: 'MessageMinAggregate';
+  id?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  roomID?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export type MessageRoom = {
+  __typename?: 'MessageRoom';
+  Message?: Maybe<Array<Message>>;
+  Project?: Maybe<Array<Project>>;
+  _count: MessageRoomCount;
+  author: User;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type MessageRoomCount = {
+  __typename?: 'MessageRoomCount';
+  Message: Scalars['Int'];
+  Project: Scalars['Int'];
+};
+
+export type MessageRoomCountAggregate = {
+  __typename?: 'MessageRoomCountAggregate';
+  _all: Scalars['Int'];
+  id: Scalars['Int'];
+  name: Scalars['Int'];
+  userId: Scalars['Int'];
+};
+
+export type MessageRoomCreateManyAuthorInput = {
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type MessageRoomCreateManyAuthorInputEnvelope = {
+  data: Array<MessageRoomCreateManyAuthorInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type MessageRoomCreateNestedManyWithoutAuthorInput = {
+  connect?: InputMaybe<Array<MessageRoomWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<MessageRoomCreateOrConnectWithoutAuthorInput>>;
+  create?: InputMaybe<Array<MessageRoomCreateWithoutAuthorInput>>;
+  createMany?: InputMaybe<MessageRoomCreateManyAuthorInputEnvelope>;
+};
+
+export type MessageRoomCreateNestedOneWithoutMessageInput = {
+  connect?: InputMaybe<MessageRoomWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<MessageRoomCreateOrConnectWithoutMessageInput>;
+  create?: InputMaybe<MessageRoomCreateWithoutMessageInput>;
+};
+
+export type MessageRoomCreateNestedOneWithoutProjectInput = {
+  connect?: InputMaybe<MessageRoomWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<MessageRoomCreateOrConnectWithoutProjectInput>;
+  create?: InputMaybe<MessageRoomCreateWithoutProjectInput>;
+};
+
+export type MessageRoomCreateOrConnectWithoutAuthorInput = {
+  create: MessageRoomCreateWithoutAuthorInput;
+  where: MessageRoomWhereUniqueInput;
+};
+
+export type MessageRoomCreateOrConnectWithoutMessageInput = {
+  create: MessageRoomCreateWithoutMessageInput;
+  where: MessageRoomWhereUniqueInput;
+};
+
+export type MessageRoomCreateOrConnectWithoutProjectInput = {
+  create: MessageRoomCreateWithoutProjectInput;
+  where: MessageRoomWhereUniqueInput;
+};
+
+export type MessageRoomCreateWithoutAuthorInput = {
+  Message?: InputMaybe<MessageCreateNestedManyWithoutRoomInput>;
+  Project?: InputMaybe<ProjectCreateNestedManyWithoutRoomInput>;
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type MessageRoomCreateWithoutMessageInput = {
+  Project?: InputMaybe<ProjectCreateNestedManyWithoutRoomInput>;
+  author: UserCreateNestedOneWithoutMessageRoomInput;
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type MessageRoomCreateWithoutProjectInput = {
+  Message?: InputMaybe<MessageCreateNestedManyWithoutRoomInput>;
+  author: UserCreateNestedOneWithoutMessageRoomInput;
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type MessageRoomMaxAggregate = {
+  __typename?: 'MessageRoomMaxAggregate';
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export type MessageRoomMinAggregate = {
+  __typename?: 'MessageRoomMinAggregate';
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export type MessageRoomUncheckedCreateInput = {
+  Message?: InputMaybe<MessageUncheckedCreateNestedManyWithoutRoomInput>;
+  Project?: InputMaybe<ProjectUncheckedCreateNestedManyWithoutRoomInput>;
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type MessageRoomUncheckedCreateNestedManyWithoutAuthorInput = {
+  connect?: InputMaybe<Array<MessageRoomWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<MessageRoomCreateOrConnectWithoutAuthorInput>>;
+  create?: InputMaybe<Array<MessageRoomCreateWithoutAuthorInput>>;
+  createMany?: InputMaybe<MessageRoomCreateManyAuthorInputEnvelope>;
+};
+
+export type MessageRoomWhereUniqueInput = {
+  id?: InputMaybe<Scalars['String']>;
+};
+
+export type MessageUncheckedCreateInput = {
+  id?: InputMaybe<Scalars['String']>;
+  message: Scalars['String'];
+  roomID: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type MessageUncheckedCreateNestedManyWithoutAuthorInput = {
+  connect?: InputMaybe<Array<MessageWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<MessageCreateOrConnectWithoutAuthorInput>>;
+  create?: InputMaybe<Array<MessageCreateWithoutAuthorInput>>;
+  createMany?: InputMaybe<MessageCreateManyAuthorInputEnvelope>;
+};
+
+export type MessageUncheckedCreateNestedManyWithoutRoomInput = {
+  connect?: InputMaybe<Array<MessageWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<MessageCreateOrConnectWithoutRoomInput>>;
+  create?: InputMaybe<Array<MessageCreateWithoutRoomInput>>;
+  createMany?: InputMaybe<MessageCreateManyRoomInputEnvelope>;
+};
+
+export type MessageWhereUniqueInput = {
+  id?: InputMaybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createBanner: Banner;
@@ -379,16 +619,24 @@ export type Mutation = {
   createConfig: Configuration;
   createDownload: Download;
   createDownloadCategory: DownloadCategory;
+  createMessage: Message;
   createPage: Page;
   createPost: Post;
+  createProject: Project;
+  createRoom: MessageRoom;
+  createStatus: Array<ProjectStatus>;
   createUser: User;
   deleteBanner: Scalars['Boolean'];
   deleteCategory: Scalars['Boolean'];
   deleteConfig: Scalars['Boolean'];
   deleteDownload: Scalars['Boolean'];
   deleteDownloadCategory: Scalars['Boolean'];
+  deleteMessage: Scalars['Boolean'];
   deletePage: Scalars['Boolean'];
   deletePost: Scalars['Boolean'];
+  deleteProject: Scalars['String'];
+  deleteRoom: Scalars['Boolean'];
+  deleteStatus: Scalars['Boolean'];
   deleteUser: Scalars['String'];
   login: Scalars['String'];
   register: Scalars['String'];
@@ -397,136 +645,162 @@ export type Mutation = {
   updateConfig: Configuration;
   updateDownload: Download;
   updateDownloadCategory: DownloadCategory;
+  updateMessage: Message;
   updatePage: Page;
   updatePost: Post;
+  updateProject: Project;
+  updateRoom: MessageRoom;
+  updateStatus: ProjectStatus;
   updateUser: User;
 };
-
 
 export type MutationCreateBannerArgs = {
   input: BannerCreateInput;
 };
 
-
 export type MutationCreateCategoryArgs = {
   input: CategoryCreateInput;
 };
-
 
 export type MutationCreateConfigArgs = {
   input: ConfigurationCreateInput;
 };
 
-
 export type MutationCreateDownloadArgs = {
   input: DownloadUncheckedCreateInput;
 };
-
 
 export type MutationCreateDownloadCategoryArgs = {
   input: DownloadCategoryCreateInput;
 };
 
+export type MutationCreateMessageArgs = {
+  input: MessageUncheckedCreateInput;
+};
 
 export type MutationCreatePageArgs = {
   input: PageUncheckedCreateInput;
 };
 
-
 export type MutationCreatePostArgs = {
   input: PostUncheckedCreateInput;
 };
 
+export type MutationCreateProjectArgs = {
+  input: ProjectUncheckedCreateInput;
+};
+
+export type MutationCreateRoomArgs = {
+  inpur: MessageRoomUncheckedCreateInput;
+};
+
+export type MutationCreateStatusArgs = {
+  input: ProjectStatusUncheckedCreateInput;
+};
 
 export type MutationCreateUserArgs = {
   input: UserUncheckedCreateInput;
 };
 
-
 export type MutationDeleteBannerArgs = {
   id: Scalars['String'];
 };
-
 
 export type MutationDeleteCategoryArgs = {
   id: Scalars['String'];
 };
 
-
 export type MutationDeleteConfigArgs = {
   id: Scalars['String'];
 };
-
 
 export type MutationDeleteDownloadArgs = {
   id: Scalars['String'];
 };
 
-
 export type MutationDeleteDownloadCategoryArgs = {
   id: Scalars['String'];
 };
 
+export type MutationDeleteMessageArgs = {
+  id: Scalars['String'];
+};
 
 export type MutationDeletePageArgs = {
   id: Scalars['String'];
 };
 
-
 export type MutationDeletePostArgs = {
   id: Scalars['String'];
 };
 
+export type MutationDeleteProjectArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDeleteRoomArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDeleteStatusArgs = {
+  id: Scalars['String'];
+};
 
 export type MutationDeleteUserArgs = {
   id: Scalars['String'];
 };
 
-
 export type MutationLoginArgs = {
   input: InputLogin;
 };
-
 
 export type MutationRegisterArgs = {
   input: InputRegister;
 };
 
-
 export type MutationUpdateBannerArgs = {
   input: BannerCreateInput;
 };
-
 
 export type MutationUpdateCategoryArgs = {
   input: CategoryCreateInput;
 };
 
-
 export type MutationUpdateConfigArgs = {
   input: ConfigurationCreateInput;
 };
-
 
 export type MutationUpdateDownloadArgs = {
   input: DownloadUncheckedCreateInput;
 };
 
-
 export type MutationUpdateDownloadCategoryArgs = {
   input: DownloadCategoryCreateInput;
 };
 
+export type MutationUpdateMessageArgs = {
+  input: MessageUncheckedCreateInput;
+};
 
 export type MutationUpdatePageArgs = {
   input: PageUncheckedCreateInput;
 };
 
-
 export type MutationUpdatePostArgs = {
   input: PostUncheckedCreateInput;
 };
 
+export type MutationUpdateProjectArgs = {
+  input: ProjectUncheckedCreateInput;
+};
+
+export type MutationUpdateRoomArgs = {
+  input: MessageRoomUncheckedCreateInput;
+};
+
+export type MutationUpdateStatusArgs = {
+  input: ProjectStatusUncheckedCreateInput;
+};
 
 export type MutationUpdateUserArgs = {
   input: UserUncheckedCreateInput;
@@ -567,7 +841,7 @@ export type PageCreateManyAuthorInput = {
   content: Scalars['String'];
   createAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  thumbnail?: InputMaybe<Scalars['Upload']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
   updateAt?: InputMaybe<Scalars['DateTime']>;
   view?: InputMaybe<Scalars['Int']>;
@@ -594,7 +868,7 @@ export type PageCreateWithoutAuthorInput = {
   content: Scalars['String'];
   createAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  thumbnail?: InputMaybe<Scalars['Upload']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
   updateAt?: InputMaybe<Scalars['DateTime']>;
   view?: InputMaybe<Scalars['Int']>;
@@ -633,7 +907,7 @@ export type PageUncheckedCreateInput = {
   content: Scalars['String'];
   createAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  thumbnail?: InputMaybe<Scalars['Upload']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
   updateAt?: InputMaybe<Scalars['DateTime']>;
   userId: Scalars['String'];
@@ -690,7 +964,7 @@ export type PostCreateManyAuthorInput = {
   content: Scalars['String'];
   createAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  thumbnail?: InputMaybe<Scalars['Upload']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
   updateAt?: InputMaybe<Scalars['DateTime']>;
   view?: InputMaybe<Scalars['Int']>;
@@ -705,7 +979,7 @@ export type PostCreateManyCategoryInput = {
   content: Scalars['String'];
   createAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  thumbnail?: InputMaybe<Scalars['Upload']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
   updateAt?: InputMaybe<Scalars['DateTime']>;
   userId: Scalars['String'];
@@ -746,7 +1020,7 @@ export type PostCreateWithoutAuthorInput = {
   content: Scalars['String'];
   createAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  thumbnail?: InputMaybe<Scalars['Upload']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
   updateAt?: InputMaybe<Scalars['DateTime']>;
   view?: InputMaybe<Scalars['Int']>;
@@ -757,7 +1031,7 @@ export type PostCreateWithoutCategoryInput = {
   content: Scalars['String'];
   createAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  thumbnail?: InputMaybe<Scalars['Upload']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
   updateAt?: InputMaybe<Scalars['DateTime']>;
   view?: InputMaybe<Scalars['Int']>;
@@ -799,7 +1073,7 @@ export type PostUncheckedCreateInput = {
   content: Scalars['String'];
   createAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  thumbnail?: InputMaybe<Scalars['Upload']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
   updateAt?: InputMaybe<Scalars['DateTime']>;
   userId: Scalars['String'];
@@ -817,6 +1091,234 @@ export type PostWhereUniqueInput = {
   id?: InputMaybe<Scalars['String']>;
 };
 
+export type Project = {
+  __typename?: 'Project';
+  author: User;
+  id: Scalars['ID'];
+  nameEN: Scalars['String'];
+  nameTH: Scalars['String'];
+  room: MessageRoom;
+  roomID: Scalars['String'];
+  status: ProjectStatus;
+  statusID: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type ProjectCountAggregate = {
+  __typename?: 'ProjectCountAggregate';
+  _all: Scalars['Int'];
+  id: Scalars['Int'];
+  nameEN: Scalars['Int'];
+  nameTH: Scalars['Int'];
+  roomID: Scalars['Int'];
+  statusID: Scalars['Int'];
+  userId: Scalars['Int'];
+};
+
+export type ProjectCreateManyAuthorInput = {
+  id?: InputMaybe<Scalars['String']>;
+  nameEN: Scalars['String'];
+  nameTH: Scalars['String'];
+  roomID: Scalars['String'];
+  statusID: Scalars['String'];
+};
+
+export type ProjectCreateManyAuthorInputEnvelope = {
+  data: Array<ProjectCreateManyAuthorInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ProjectCreateManyRoomInput = {
+  id?: InputMaybe<Scalars['String']>;
+  nameEN: Scalars['String'];
+  nameTH: Scalars['String'];
+  statusID: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type ProjectCreateManyRoomInputEnvelope = {
+  data: Array<ProjectCreateManyRoomInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ProjectCreateManyStatusInput = {
+  id?: InputMaybe<Scalars['String']>;
+  nameEN: Scalars['String'];
+  nameTH: Scalars['String'];
+  roomID: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type ProjectCreateManyStatusInputEnvelope = {
+  data: Array<ProjectCreateManyStatusInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ProjectCreateNestedManyWithoutAuthorInput = {
+  connect?: InputMaybe<Array<ProjectWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<ProjectCreateOrConnectWithoutAuthorInput>>;
+  create?: InputMaybe<Array<ProjectCreateWithoutAuthorInput>>;
+  createMany?: InputMaybe<ProjectCreateManyAuthorInputEnvelope>;
+};
+
+export type ProjectCreateNestedManyWithoutRoomInput = {
+  connect?: InputMaybe<Array<ProjectWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<ProjectCreateOrConnectWithoutRoomInput>>;
+  create?: InputMaybe<Array<ProjectCreateWithoutRoomInput>>;
+  createMany?: InputMaybe<ProjectCreateManyRoomInputEnvelope>;
+};
+
+export type ProjectCreateOrConnectWithoutAuthorInput = {
+  create: ProjectCreateWithoutAuthorInput;
+  where: ProjectWhereUniqueInput;
+};
+
+export type ProjectCreateOrConnectWithoutRoomInput = {
+  create: ProjectCreateWithoutRoomInput;
+  where: ProjectWhereUniqueInput;
+};
+
+export type ProjectCreateOrConnectWithoutStatusInput = {
+  create: ProjectCreateWithoutStatusInput;
+  where: ProjectWhereUniqueInput;
+};
+
+export type ProjectCreateWithoutAuthorInput = {
+  id?: InputMaybe<Scalars['String']>;
+  nameEN: Scalars['String'];
+  nameTH: Scalars['String'];
+  room: MessageRoomCreateNestedOneWithoutProjectInput;
+  status: ProjectStatusCreateNestedOneWithoutProjectInput;
+};
+
+export type ProjectCreateWithoutRoomInput = {
+  author: UserCreateNestedOneWithoutProjectInput;
+  id?: InputMaybe<Scalars['String']>;
+  nameEN: Scalars['String'];
+  nameTH: Scalars['String'];
+  status: ProjectStatusCreateNestedOneWithoutProjectInput;
+};
+
+export type ProjectCreateWithoutStatusInput = {
+  author: UserCreateNestedOneWithoutProjectInput;
+  id?: InputMaybe<Scalars['String']>;
+  nameEN: Scalars['String'];
+  nameTH: Scalars['String'];
+  room: MessageRoomCreateNestedOneWithoutProjectInput;
+};
+
+export type ProjectMaxAggregate = {
+  __typename?: 'ProjectMaxAggregate';
+  id?: Maybe<Scalars['String']>;
+  nameEN?: Maybe<Scalars['String']>;
+  nameTH?: Maybe<Scalars['String']>;
+  roomID?: Maybe<Scalars['String']>;
+  statusID?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export type ProjectMinAggregate = {
+  __typename?: 'ProjectMinAggregate';
+  id?: Maybe<Scalars['String']>;
+  nameEN?: Maybe<Scalars['String']>;
+  nameTH?: Maybe<Scalars['String']>;
+  roomID?: Maybe<Scalars['String']>;
+  statusID?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export type ProjectStatus = {
+  __typename?: 'ProjectStatus';
+  Project?: Maybe<Array<Project>>;
+  _count: ProjectStatusCount;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+};
+
+export type ProjectStatusCount = {
+  __typename?: 'ProjectStatusCount';
+  Project: Scalars['Int'];
+};
+
+export type ProjectStatusCountAggregate = {
+  __typename?: 'ProjectStatusCountAggregate';
+  _all: Scalars['Int'];
+  id: Scalars['Int'];
+  name: Scalars['Int'];
+};
+
+export type ProjectStatusCreateNestedOneWithoutProjectInput = {
+  connect?: InputMaybe<ProjectStatusWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<ProjectStatusCreateOrConnectWithoutProjectInput>;
+  create?: InputMaybe<ProjectStatusCreateWithoutProjectInput>;
+};
+
+export type ProjectStatusCreateOrConnectWithoutProjectInput = {
+  create: ProjectStatusCreateWithoutProjectInput;
+  where: ProjectStatusWhereUniqueInput;
+};
+
+export type ProjectStatusCreateWithoutProjectInput = {
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type ProjectStatusMaxAggregate = {
+  __typename?: 'ProjectStatusMaxAggregate';
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type ProjectStatusMinAggregate = {
+  __typename?: 'ProjectStatusMinAggregate';
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type ProjectStatusUncheckedCreateInput = {
+  Project?: InputMaybe<ProjectUncheckedCreateNestedManyWithoutStatusInput>;
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type ProjectStatusWhereUniqueInput = {
+  id?: InputMaybe<Scalars['String']>;
+};
+
+export type ProjectUncheckedCreateInput = {
+  id?: InputMaybe<Scalars['String']>;
+  nameEN: Scalars['String'];
+  nameTH: Scalars['String'];
+  roomID: Scalars['String'];
+  statusID: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type ProjectUncheckedCreateNestedManyWithoutAuthorInput = {
+  connect?: InputMaybe<Array<ProjectWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<ProjectCreateOrConnectWithoutAuthorInput>>;
+  create?: InputMaybe<Array<ProjectCreateWithoutAuthorInput>>;
+  createMany?: InputMaybe<ProjectCreateManyAuthorInputEnvelope>;
+};
+
+export type ProjectUncheckedCreateNestedManyWithoutRoomInput = {
+  connect?: InputMaybe<Array<ProjectWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<ProjectCreateOrConnectWithoutRoomInput>>;
+  create?: InputMaybe<Array<ProjectCreateWithoutRoomInput>>;
+  createMany?: InputMaybe<ProjectCreateManyRoomInputEnvelope>;
+};
+
+export type ProjectUncheckedCreateNestedManyWithoutStatusInput = {
+  connect?: InputMaybe<Array<ProjectWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<ProjectCreateOrConnectWithoutStatusInput>>;
+  create?: InputMaybe<Array<ProjectCreateWithoutStatusInput>>;
+  createMany?: InputMaybe<ProjectCreateManyStatusInputEnvelope>;
+};
+
+export type ProjectWhereUniqueInput = {
+  id?: InputMaybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   banner: Banner;
@@ -829,49 +1331,65 @@ export type Query = {
   downloadCategories: DownloadCategory;
   downloadCategory: DownloadCategory;
   downloads: Array<Download>;
+  fineStatus: ProjectStatus;
+  getStatus: ProjectStatus;
+  message: Message;
+  messageRoom: MessageRoom;
+  messageRooms: Array<MessageRoom>;
+  messages: Array<Message>;
   page: Page;
   pages: Array<Page>;
   post: Post;
   posts: Array<Post>;
+  project: Project;
+  projects: Array<Project>;
   user: User;
   users: Array<User>;
 };
-
 
 export type QueryBannerArgs = {
   id: Scalars['String'];
 };
 
-
 export type QueryCategoryArgs = {
   id: Scalars['String'];
 };
-
 
 export type QueryConfigurationArgs = {
   id: Scalars['String'];
 };
 
-
 export type QueryDownloadArgs = {
   id: Scalars['String'];
 };
-
 
 export type QueryDownloadCategoryArgs = {
   id: Scalars['String'];
 };
 
+export type QueryFineStatusArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryMessageArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryMessageRoomArgs = {
+  id: Scalars['String'];
+};
 
 export type QueryPageArgs = {
   id: Scalars['String'];
 };
 
-
 export type QueryPostArgs = {
   id: Scalars['String'];
 };
 
+export type QueryProjectArgs = {
+  id: Scalars['String'];
+};
 
 export type QueryUserArgs = {
   id: Scalars['String'];
@@ -879,14 +1397,18 @@ export type QueryUserArgs = {
 
 export enum Role {
   Admin = 'ADMIN',
+  Teacher = 'TEACHER',
   User = 'USER'
 }
 
 export type User = {
   __typename?: 'User';
   Download?: Maybe<Array<Download>>;
+  Message?: Maybe<Array<Message>>;
+  MessageRoom?: Maybe<Array<MessageRoom>>;
   Page?: Maybe<Array<Page>>;
   Post?: Maybe<Array<Post>>;
+  Project?: Maybe<Array<Project>>;
   _count: UserCount;
   avatar: Scalars['String'];
   createAt: Scalars['DateTime'];
@@ -901,8 +1423,11 @@ export type User = {
 export type UserCount = {
   __typename?: 'UserCount';
   Download: Scalars['Int'];
+  Message: Scalars['Int'];
+  MessageRoom: Scalars['Int'];
   Page: Scalars['Int'];
   Post: Scalars['Int'];
+  Project: Scalars['Int'];
 };
 
 export type UserCountAggregate = {
@@ -924,14 +1449,42 @@ export type UserCreateNestedOneWithoutDownloadInput = {
   create?: InputMaybe<UserCreateWithoutDownloadInput>;
 };
 
+export type UserCreateNestedOneWithoutMessageInput = {
+  connect?: InputMaybe<UserWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutMessageInput>;
+  create?: InputMaybe<UserCreateWithoutMessageInput>;
+};
+
+export type UserCreateNestedOneWithoutMessageRoomInput = {
+  connect?: InputMaybe<UserWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutMessageRoomInput>;
+  create?: InputMaybe<UserCreateWithoutMessageRoomInput>;
+};
+
 export type UserCreateNestedOneWithoutPostInput = {
   connect?: InputMaybe<UserWhereUniqueInput>;
   connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutPostInput>;
   create?: InputMaybe<UserCreateWithoutPostInput>;
 };
 
+export type UserCreateNestedOneWithoutProjectInput = {
+  connect?: InputMaybe<UserWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutProjectInput>;
+  create?: InputMaybe<UserCreateWithoutProjectInput>;
+};
+
 export type UserCreateOrConnectWithoutDownloadInput = {
   create: UserCreateWithoutDownloadInput;
+  where: UserWhereUniqueInput;
+};
+
+export type UserCreateOrConnectWithoutMessageInput = {
+  create: UserCreateWithoutMessageInput;
+  where: UserWhereUniqueInput;
+};
+
+export type UserCreateOrConnectWithoutMessageRoomInput = {
+  create: UserCreateWithoutMessageRoomInput;
   where: UserWhereUniqueInput;
 };
 
@@ -940,10 +1493,50 @@ export type UserCreateOrConnectWithoutPostInput = {
   where: UserWhereUniqueInput;
 };
 
+export type UserCreateOrConnectWithoutProjectInput = {
+  create: UserCreateWithoutProjectInput;
+  where: UserWhereUniqueInput;
+};
+
 export type UserCreateWithoutDownloadInput = {
+  Message?: InputMaybe<MessageCreateNestedManyWithoutAuthorInput>;
+  MessageRoom?: InputMaybe<MessageRoomCreateNestedManyWithoutAuthorInput>;
   Page?: InputMaybe<PageCreateNestedManyWithoutAuthorInput>;
   Post?: InputMaybe<PostCreateNestedManyWithoutAuthorInput>;
-  avatar?: InputMaybe<Scalars['Upload']>;
+  Project?: InputMaybe<ProjectCreateNestedManyWithoutAuthorInput>;
+  avatar?: InputMaybe<Scalars['String']>;
+  createAt?: InputMaybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  password: Scalars['String'];
+  role?: InputMaybe<Role>;
+  updateAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type UserCreateWithoutMessageInput = {
+  Download?: InputMaybe<DownloadCreateNestedManyWithoutAuthorInput>;
+  MessageRoom?: InputMaybe<MessageRoomCreateNestedManyWithoutAuthorInput>;
+  Page?: InputMaybe<PageCreateNestedManyWithoutAuthorInput>;
+  Post?: InputMaybe<PostCreateNestedManyWithoutAuthorInput>;
+  Project?: InputMaybe<ProjectCreateNestedManyWithoutAuthorInput>;
+  avatar?: InputMaybe<Scalars['String']>;
+  createAt?: InputMaybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  password: Scalars['String'];
+  role?: InputMaybe<Role>;
+  updateAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type UserCreateWithoutMessageRoomInput = {
+  Download?: InputMaybe<DownloadCreateNestedManyWithoutAuthorInput>;
+  Message?: InputMaybe<MessageCreateNestedManyWithoutAuthorInput>;
+  Page?: InputMaybe<PageCreateNestedManyWithoutAuthorInput>;
+  Post?: InputMaybe<PostCreateNestedManyWithoutAuthorInput>;
+  Project?: InputMaybe<ProjectCreateNestedManyWithoutAuthorInput>;
+  avatar?: InputMaybe<Scalars['String']>;
   createAt?: InputMaybe<Scalars['DateTime']>;
   email: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
@@ -955,8 +1548,27 @@ export type UserCreateWithoutDownloadInput = {
 
 export type UserCreateWithoutPostInput = {
   Download?: InputMaybe<DownloadCreateNestedManyWithoutAuthorInput>;
+  Message?: InputMaybe<MessageCreateNestedManyWithoutAuthorInput>;
+  MessageRoom?: InputMaybe<MessageRoomCreateNestedManyWithoutAuthorInput>;
   Page?: InputMaybe<PageCreateNestedManyWithoutAuthorInput>;
-  avatar?: InputMaybe<Scalars['Upload']>;
+  Project?: InputMaybe<ProjectCreateNestedManyWithoutAuthorInput>;
+  avatar?: InputMaybe<Scalars['String']>;
+  createAt?: InputMaybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  password: Scalars['String'];
+  role?: InputMaybe<Role>;
+  updateAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type UserCreateWithoutProjectInput = {
+  Download?: InputMaybe<DownloadCreateNestedManyWithoutAuthorInput>;
+  Message?: InputMaybe<MessageCreateNestedManyWithoutAuthorInput>;
+  MessageRoom?: InputMaybe<MessageRoomCreateNestedManyWithoutAuthorInput>;
+  Page?: InputMaybe<PageCreateNestedManyWithoutAuthorInput>;
+  Post?: InputMaybe<PostCreateNestedManyWithoutAuthorInput>;
+  avatar?: InputMaybe<Scalars['String']>;
   createAt?: InputMaybe<Scalars['DateTime']>;
   email: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
@@ -992,9 +1604,12 @@ export type UserMinAggregate = {
 
 export type UserUncheckedCreateInput = {
   Download?: InputMaybe<DownloadUncheckedCreateNestedManyWithoutAuthorInput>;
+  Message?: InputMaybe<MessageUncheckedCreateNestedManyWithoutAuthorInput>;
+  MessageRoom?: InputMaybe<MessageRoomUncheckedCreateNestedManyWithoutAuthorInput>;
   Page?: InputMaybe<PageUncheckedCreateNestedManyWithoutAuthorInput>;
   Post?: InputMaybe<PostUncheckedCreateNestedManyWithoutAuthorInput>;
-  avatar?: InputMaybe<Scalars['Upload']>;
+  Project?: InputMaybe<ProjectUncheckedCreateNestedManyWithoutAuthorInput>;
+  avatar?: InputMaybe<Scalars['String']>;
   createAt?: InputMaybe<Scalars['DateTime']>;
   email: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
@@ -1016,9 +1631,12 @@ export type InputLogin = {
 
 export type InputRegister = {
   Download?: InputMaybe<DownloadCreateNestedManyWithoutAuthorInput>;
+  Message?: InputMaybe<MessageCreateNestedManyWithoutAuthorInput>;
+  MessageRoom?: InputMaybe<MessageRoomCreateNestedManyWithoutAuthorInput>;
   Page?: InputMaybe<PageCreateNestedManyWithoutAuthorInput>;
   Post?: InputMaybe<PostCreateNestedManyWithoutAuthorInput>;
-  avatar?: InputMaybe<Scalars['Upload']>;
+  Project?: InputMaybe<ProjectCreateNestedManyWithoutAuthorInput>;
+  avatar?: InputMaybe<Scalars['String']>;
   confirmPassword: Scalars['String'];
   createAt?: InputMaybe<Scalars['DateTime']>;
   email: Scalars['String'];

@@ -18,19 +18,40 @@
           <v-btn icon>
             <v-icon>mdi-heart</v-icon>
           </v-btn>
-
+          <v-btn :icon="data.switch ? 'mdi-weather-night' : 'mdi-weather-sunny'" @click="toggleTheme" />
           <v-btn icon>
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </v-app-bar>
         <v-navigation-drawer v-model="data.drawer" temporary>
-          <v-list-item prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg" title="John Leider" nav />
+          <div class="flex align-center">
+            <v-list-item :prepend-avatar="`${data.http}/images/${data.avatar}`" :title="data.name" :subtitle="data.email" nav />
+            <v-chip :color="getColor()">
+              {{ userRole }}
+            </v-chip>
+          </div>
 
           <v-divider />
 
           <v-list density="compact" nav>
-            <v-list-item v-for="(item, i) in data.items" :key="i" exact :to="item.to" :prepend-icon="item.icon"
-              :title="item.title" :value="i" @click="data.rail = !data.rail" />
+            <v-list-item
+              v-for="(item, i) in items"
+              :key="i"
+              exact
+              :to="item.to"
+              :prepend-icon="item.icon"
+              :title="item.title"
+              :value="i"
+              @click="data.rail = !data.rail"
+            />
+            <v-list-item
+
+              exact
+              :to="'/'"
+              prepend-icon="mdi-logout"
+              title="Logout"
+              @click="onLogout"
+            />
           </v-list>
         </v-navigation-drawer>
 
@@ -41,6 +62,17 @@
         </v-main>
       </v-layout>
     </v-card>
+    <v-footer>
+      <div class="flex justify-sm-space-between min-w-full">
+        <div>
+          Copyright © 2023 Computer CMRU
+        </div>
+        <div>
+          V.0.29.0
+        </div>
+      </div>
+      <div class="flex justify-end min-w-full" />
+    </v-footer>
     <!-- <v-footer
       :absolute="!data.fixed"
       app
@@ -51,12 +83,54 @@
 </template>
 
 <script lang="ts" setup>
-const data = reactive({
+import jwtDecode from 'jwt-decode'
+import { useTheme } from 'vuetify/lib/framework.mjs'
+import socket from '~~/plugins/socket.io'
+import { useEnv } from '~~/store/environment'
+import { useProfile } from '~~/store/profile'
+import { Role } from '~~/types/graphql'
+const theme = useTheme()
+const items = ref<any[]>(
+  [
+    {
+      icon: 'mdi-apps',
+      title: 'Welcome',
+      to: '/welcome'
+    },
+    {
+      icon: 'mdi-chart-bubble',
+      title: 'Inspire',
+      to: '/inspire'
+    },
+    {
+      icon: 'mdi-file-document-multiple',
+      title: 'Project',
+      to: '/project'
+    },
+    {
+      icon: 'mdi-message-badge',
+      title: 'Message',
+      to: '/message'
+    },
+    {
+      icon: 'mdi-account',
+      title: 'Profile',
+      to: '/Profile'
+    }
+  ]
+)
 
+const data = reactive({
+  switch: !!theme.global.current.value.dark,
+  userId: '',
+  name: '',
+  email: '',
+  avatar: '',
   clipped: false,
   drawer: false,
   fixed: false,
   rail: false,
+  http: useEnv().BACKEND_API_URL,
   items: [
     {
       icon: 'mdi-apps',
@@ -67,6 +141,11 @@ const data = reactive({
       icon: 'mdi-chart-bubble',
       title: 'Inspire',
       to: '/inspire'
+    },
+    {
+      icon: 'mdi-file-document-multiple',
+      title: 'Project',
+      to: '/project'
     },
     {
       icon: 'mdi-message-badge',
@@ -80,16 +159,65 @@ const data = reactive({
     },
     {
       icon: 'mdi-database',
-      title: 'Data Management',
-      to: '/dataManage'
+      title: 'Database',
+      to: '/database'
+    },
+    {
+      icon: 'mdi-message-badge',
+      title: 'Test Chat',
+      to: '/message2'
+    }
+  ]
+})
+
+const onLogout = () => {
+  useRouter().push('/')
+  socket.disconnect()
+  socket.on('disconnect', () => {
+    console.log(socket.connected) // false
+  })
+}
+
+const toggleTheme = () => {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+  data.switch = !data.switch
+}
+
+type typeToken ={
+  exp?: number;
+  iat?: number;
+  userId: string;
+  role: Role;
+  email: string;
+  avatar: string;
+  name: string;
+}
+// TODO set Token
+const token = useCookie('token').value as any
+const deToken = jwtDecode(token?.data.login) as typeToken
+data.email = deToken.email
+data.avatar = deToken.avatar
+data.name = deToken.name
+useProfile().setUser({ userId: deToken.userId, email: deToken.email, avatar: deToken.avatar, role: deToken.role, name: deToken.name })
+
+if (useProfile().role === 'ADMIN') {
+  items.value.push(
+    {
+      icon: 'mdi-wrench-cog',
+      title: 'Configuration',
+      to: '/configure'
     },
     {
       icon: 'mdi-database',
-      title: 'Test Page',
-      to: '/test'
+      title: 'Database',
+      to: '/database'
     }
-  ]
 
-})
-
+  )
+}
+const userRole = useProfile().role
+const getColor = () => {
+  const role = useProfile().role
+  if (role === 'ADMIN') { return 'red' } else if (role === 'TEACHER') { return 'orange' } else { return 'green' }
+}
 </script>
