@@ -41,7 +41,7 @@
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-text-field ref="input" v-model="data.message" label="Message" placeholder="What do you think?" />
-        <v-btn value="recent1">
+        <v-btn value="recent1" @click.prevent="playSound()">
           <v-icon>mdi-attachment</v-icon>
         </v-btn>
         <v-btn value="recent2" @click="sendMessage">
@@ -129,8 +129,16 @@ onMounted(() => {
   })
   socket.on('response', (msgBody: response) => {
     data.messages.push(msgBody)
+    if (msgBody.userId !== data.userId) {
+      playSound()
+    }
   })
 })
+const playSound = () => {
+  // const audio = new Audio('/sound/notify.mp3')
+  const audio = new Audio('/sound/notify2.mp3')
+  audio.play()
+}
 
 const sendMessage = () => {
   if (data.message !== '' && data.roomId !== '') {
