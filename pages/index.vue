@@ -14,7 +14,7 @@
           </div>
         </div>
       </div>
-      <div class=" grid align-center">
+      <div class=" grid align-center max-w-2xl">
         <v-card ref="form" class="ma-4">
           <v-card-text>
             <form @submit.prevent="submit">

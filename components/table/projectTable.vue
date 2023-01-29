@@ -124,6 +124,7 @@ const closeDialog = () => {
   data.editedIndex = -1
 }
 const projects = await useQueryStore().projectById
+console.log('projects :>> ', projects)
 
 const editItem = (item: any) => {
   data.dialogTitle = 'Edit'

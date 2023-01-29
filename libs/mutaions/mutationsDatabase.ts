@@ -1,4 +1,6 @@
 import { CREATE_PROJECT, CREATE_PROJECT_TYPES, CREATE_STATUS, CREATE_USER, CREATE_USER_PROJECT, DELETE_PROJECT, DELETE_PROJECT_TYPES, DELETE_STATUS, DELETE_USER, LOGIN, REGISTER, UPDATE_PROJECT, UPDATE_PROJECT_TYPES, UPDATE_STATUS, UPDATE_USER } from '~~/apollo/mutation'
+import { LIST_MESSAGES_BY_PROJECT_ID } from '~~/apollo/query'
+import { useMessage } from '~~/store/message'
 
 const mutationsDatabase = () => {
   const login = async ({ onResult, onError, value }:any) => {
@@ -130,6 +132,15 @@ const mutationsDatabase = () => {
       onError(error)
     }
   }
+  const getMessageByProject = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useAsyncQuery<any>(LIST_MESSAGES_BY_PROJECT_ID, { id: value })
+      useMessage().setMessage(res.data.value?.messagesByProject)
+      onResult(res.data.value?.messagesByProject)
+    } catch (error) {
+      onError(error)
+    }
+  }
 
   return {
     login,
@@ -151,7 +162,9 @@ const mutationsDatabase = () => {
     updateProject,
     deleteProject,
 
-    createUserProject
+    createUserProject,
+
+    getMessageByProject
   }
 }
 export default mutationsDatabase

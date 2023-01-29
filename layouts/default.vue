@@ -25,7 +25,7 @@
         </v-app-bar>
         <v-navigation-drawer v-model="data.drawer" temporary>
           <div class="flex align-center">
-            <v-list-item :prepend-avatar="`${data.http}/images/${data.avatar}`" :title="data.name" :subtitle="data.email" nav />
+            <v-list-item :prepend-avatar="`${data.avatar.startsWith('http') ? 'https://picsum.photos/300/300': `${data.http}/images/${data.avatar}`}`" :title="data.name" :subtitle="data.email" nav />
             <v-chip :color="getColor()">
               {{ userRole }}
             </v-chip>
@@ -173,6 +173,8 @@ const data = reactive({
 const onLogout = () => {
   useRouter().push('/')
   socket.disconnect()
+  useCookie('token').value = ''
+  console.log('useCookie() :>> ', useCookie('token'))
   socket.on('disconnect', () => {
     console.log(socket.connected) // false
   })
