@@ -1,5 +1,5 @@
 export default gql`
-mutation updateProject($id:String! ,$nameTH: String,$nameEN: String,$statusId: String,$typeId: String ){
+mutation updateProject($id:String! ,$nameTH: String!,$nameEN: String!,$statusId: String!,$typeId: String! ){
   updateProject(
     input: {
         id: $id

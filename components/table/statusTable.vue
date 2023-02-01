@@ -91,7 +91,7 @@ const data = reactive({
   loading: true,
   search: '',
   headers: [
-    { title: 'ID', key: 'id' },
+    // { title: 'ID', key: 'id' },
     { title: 'Name', key: 'name' },
     { title: 'Actions', key: 'actions', sortable: false }
   ],
@@ -114,6 +114,10 @@ const closeDialog = () => {
   data.editedIndex = -1
 }
 const status = await useQueryStore().status
+
+status.forEach((item:any) => {
+  item.createdAt = new Date(item.createdAt).toLocaleDateString()
+})
 
 const editItem = (item: any) => {
   data.dialogTitle = 'Edit'

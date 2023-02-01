@@ -5,4 +5,13 @@
 </template>
 <script lang="ts" setup>
 
+useHead({
+  title: 'Project',
+  meta: [
+    {
+      name: 'description',
+      content: 'Chat'
+    }
+  ]
+})
 </script>

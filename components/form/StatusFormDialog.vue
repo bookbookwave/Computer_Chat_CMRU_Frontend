@@ -23,7 +23,6 @@
           Save
         </v-btn>
       </v-card-actions>
-      {{ props2 }}
     </v-card>
     <!-- </v-dialog> -->
   </v-no-ssr>

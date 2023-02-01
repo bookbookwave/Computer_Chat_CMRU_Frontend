@@ -1,5 +1,6 @@
-import { CREATE_PROJECT, CREATE_PROJECT_TYPES, CREATE_STATUS, CREATE_USER, CREATE_USER_PROJECT, DELETE_PROJECT, DELETE_PROJECT_TYPES, DELETE_STATUS, DELETE_USER, LOGIN, REGISTER, UPDATE_PROJECT, UPDATE_PROJECT_TYPES, UPDATE_STATUS, UPDATE_USER } from '~~/apollo/mutation'
-import { LIST_MESSAGES_BY_PROJECT_ID } from '~~/apollo/query'
+import { CREATE_FILE, CREATE_PROJECT, CREATE_PROJECT_TYPES, CREATE_STATUS, CREATE_USER, CREATE_USER_PROJECT, DELETE_PROJECT, DELETE_PROJECT_TYPES, DELETE_STATUS, DELETE_USER, LOGIN, REGISTER, UPDATE_PROJECT, UPDATE_PROJECT_TYPES, UPDATE_STATUS, UPDATE_USER } from '~~/apollo/mutation'
+import { LIST_FILE_UPLOAD_BY_PROJECT_ID, LIST_MESSAGES_BY_PROJECT_ID } from '~~/apollo/query'
+import { useFileUpload } from '~~/store/fileUpload'
 import { useMessage } from '~~/store/message'
 
 const mutationsDatabase = () => {
@@ -86,6 +87,7 @@ const mutationsDatabase = () => {
   }
   const updateProjectTypes = async ({ onResult, onError, value }:any) => {
     try {
+      console.log('value :>> ', value)
       const res = await useMutation(UPDATE_PROJECT_TYPES).mutate(value)
       onResult(res)
     } catch (error) {
@@ -141,6 +143,23 @@ const mutationsDatabase = () => {
       onError(error)
     }
   }
+  const createFile = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(CREATE_FILE).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const getFileByProjectId = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useAsyncQuery<any>(LIST_FILE_UPLOAD_BY_PROJECT_ID, { id: value })
+      useFileUpload().setFile(res.data.value?.getFilesById)
+      onResult(res.data.value?.getFilesById)
+    } catch (error) {
+      onError(error)
+    }
+  }
 
   return {
     login,
@@ -164,7 +183,11 @@ const mutationsDatabase = () => {
 
     createUserProject,
 
-    getMessageByProject
+    getMessageByProject,
+
+    createFile,
+
+    getFileByProjectId
   }
 }
 export default mutationsDatabase

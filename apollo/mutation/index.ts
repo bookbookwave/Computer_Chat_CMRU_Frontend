@@ -18,3 +18,5 @@ export { default as UPDATE_PROJECT } from './project/updateProject'
 export { default as DELETE_PROJECT } from './project/deleteProject'
 
 export { default as CREATE_USER_PROJECT } from './userProject/create'
+
+export { default as CREATE_FILE } from './fileUpload/create'

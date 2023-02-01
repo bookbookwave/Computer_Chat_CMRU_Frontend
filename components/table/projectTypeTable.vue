@@ -91,7 +91,7 @@ const data = reactive({
   loading: true,
   search: '',
   headers: [
-    { title: 'ID', key: 'id' },
+    // { title: 'ID', key: 'id' },
     { title: 'Name', key: 'name' },
     { title: 'Actions', key: 'actions', sortable: false }
   ],

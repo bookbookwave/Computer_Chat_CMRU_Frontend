@@ -2,12 +2,12 @@
   <v-app light>
     <v-card>
       <v-layout class="min-h-screen">
-        <v-app-bar color="dark">
+        <v-app-bar color="dark" :floating="true">
           <template #prepend>
             <v-app-bar-nav-icon @click="data.drawer = !data.drawer" />
           </template>
 
-          <v-app-bar-title>Title</v-app-bar-title>
+          <v-app-bar-title>{{ data.title }}</v-app-bar-title>
 
           <v-spacer />
 
@@ -42,7 +42,7 @@
               :prepend-icon="item.icon"
               :title="item.title"
               :value="i"
-              @click="data.rail = !data.rail"
+              @click="onContentClick(item.title)"
             />
             <v-list-item
 
@@ -65,7 +65,7 @@
     <v-footer>
       <div class="flex justify-sm-space-between min-w-full">
         <div>
-          Copyright © 2023 Computer CMRU
+          Copyright © 2023 Department of Computer, CMRU. All rights reserved.
         </div>
         <div>
           V.0.29.0
@@ -131,6 +131,7 @@ const data = reactive({
   fixed: false,
   rail: false,
   http: useEnv().BACKEND_API_URL,
+  title: '',
   items: [
     {
       icon: 'mdi-apps',
@@ -174,7 +175,6 @@ const onLogout = () => {
   useRouter().push('/')
   socket.disconnect()
   useCookie('token').value = ''
-  console.log('useCookie() :>> ', useCookie('token'))
   socket.on('disconnect', () => {
     console.log(socket.connected) // false
   })
@@ -222,4 +222,10 @@ const getColor = () => {
   const role = useProfile().role
   if (role === 'ADMIN') { return 'red' } else if (role === 'TEACHER') { return 'orange' } else { return 'green' }
 }
+
+const onContentClick = (item:any) => {
+  data.title = item
+  data.rail = !data.rail
+}
+
 </script>

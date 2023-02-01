@@ -5,7 +5,8 @@ export const useQueryStore = defineStore('useQueryStore', {
     projects: [],
     status: [],
     projectType: [],
-    projectById: []
+    projectById: [],
+    fileUploadById: []
   }),
   getters: {
 
@@ -25,6 +26,9 @@ export const useQueryStore = defineStore('useQueryStore', {
     },
     setProjectById (projectId) {
       this.projectById = projectId
+    },
+    setFileUploadById (fileUploadId) {
+      this.fileUploadById = fileUploadId
     }
   }
 })

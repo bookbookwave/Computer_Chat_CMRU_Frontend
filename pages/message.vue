@@ -2,53 +2,95 @@
   <div>
     <v-navigation-drawer v-model="data.drawer" permanent location="right" temporary>
       <template #prepend>
-        <v-list-item lines="one" prepend-icon="mdi-message" title="Project Message" />
+        <v-list-item lines="one" prepend-icon="mdi-google-classroom" title="Project Message" />
       </template>
 
       <v-divider />
-      <v-list density="compact" nav>
-        <v-list-item
-          v-for="(item, i) in projects"
-          :key="i"
-          prepend-icon="mdi-message"
-          :title="item.nameEN"
-          :value="i"
-          @click="joinRoom(item.id)"
-        />
-      </v-list>
+      <v-col>
+        <v-list density="compact" nav>
+          <v-list-item
+            v-for="(item, i) in projects"
+            :key="i"
+            prepend-icon="mdi-message"
+            :title="item.nameEN"
+            :value="i"
+            @click="joinRoom(item.id)"
+          />
+        </v-list>
+      </v-col>
+
+      <div v-if="data.roomId !== ''">
+        <v-divider />
+        <v-list-item lines="one" prepend-icon="mdi-file-document" title="File of This Project" />
+        <v-divider />
+
+        <v-col>
+          <v-list density="compact" nav>
+            <v-no-ssr>
+              <v-dialog v-model="data.fileDetails">
+                <template #activator="{ props }">
+                  <v-list-item
+                    v-for="(item, i) in data.file"
+                    v-bind="props"
+                    :key="i"
+                    prepend-icon="mdi-file-pdf-box"
+                    :title="item.filename"
+                    :subtitle="item.createdAt"
+                    :value="i"
+                    @click="getDetails(item)"
+                  />
+                </template>
+                <modal-file-upload-details text-dialog="File Detail" :values="data.useDetails" @dialog-false="closeDialog" />
+              </v-dialog>
+            </v-no-ssr>
+          </v-list>
+        </v-col>
+      </div>
     </v-navigation-drawer>
-    <div ref="chatContainer" class="max-h-screen overflow-auto scroll-m-0 mb-4">
-      <div v-if="data.messages.length === 0" class="flex align-center min-h-screen justify-center">
+    <div id="chatContainer" ref="chatContainer" class="overflow-auto scroll-m-0 mb-4">
+      <div v-if="data.messages.length === 0" class="flex align-center justify-center">
         <h1>
           Please ... Select Chat Room
         </h1>
       </div>
-      <div
-        v-for="(msg, index) in data.messages"
-        :key="index"
-        :class="['message text-[#fff]', msg.userId === data.userId ? 'text-right' : 'text-left']"
-      >
-        <!-- {{ msg }} -->
-        <v-chip class="ma-2" color="primary">
-          {{ msg.msg }}
-        </v-chip>
+      <div class="max-h-[750px]">
+        <div
+          v-for="(msg, index) in data.messages"
+          :key="index"
+          :class="['message text-[#fff]', msg.userId === data.username ? 'text-right' : 'text-left']"
+        >
+          <!-- {{ msg }} -->
+          <div class="text-caption text-disabled mx-4">
+            {{ msg.userId }}
+          </div>
+          <v-chip class="ma-2" color="primary">
+            {{ msg.msg }}
+          </v-chip>
+        </div>
       </div>
+      <v-no-ssr>
+        <v-bottom-navigation>
+          <form class="flex min-w-full" @submit.prevent="sendMessage">
+            <v-btn value="recent3" @click="data.drawer = !data.drawer">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+            <v-text-field ref="input" v-model="data.message" label="Message" placeholder="What do you think?" />
+            <v-dialog v-model="data.isFile" persistent>
+              <template #activator="{ props }">
+                <v-btn v-if="data.roomId !== ''" value="recent1" v-bind="props" @click.prevent="playSound()">
+                  <v-icon>mdi-attachment</v-icon>
+                </v-btn>
+              </template>
+              <form-file-upload text-dialog="Upload File" :room-id="data.roomId" @dialog-false="closeDialog" />
+            </v-dialog>
+            <v-btn value="recent2" @click="sendMessage">
+              <v-icon>mdi-send</v-icon>
+            </v-btn>
+          </form>
+        </v-bottom-navigation>
+      </v-no-ssr>
     </div>
 
-    <v-bottom-navigation>
-      <form class="flex min-w-full" @submit.prevent="sendMessage">
-        <v-btn value="recent3" @click="data.drawer = !data.drawer">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-        <v-text-field ref="input" v-model="data.message" label="Message" placeholder="What do you think?" />
-        <v-btn value="recent1" @click.prevent="playSound()">
-          <v-icon>mdi-attachment</v-icon>
-        </v-btn>
-        <v-btn value="recent2" @click="sendMessage">
-          <v-icon>mdi-send</v-icon>
-        </v-btn>
-      </form>
-    </v-bottom-navigation>
     <!-- <ContainerSnackBar /> -->
   </div>
 </template>
@@ -72,6 +114,15 @@ type response = {
   projectId: string,
   msg: string,
 }
+type FileUpload = {
+  filename: string,
+  file: string,
+  createdAt : string,
+  comment: string,
+  status: {
+    name: string,
+  }
+}
 
 const data = reactive({
   host: useEnv().BACKEND_API_URL,
@@ -81,9 +132,13 @@ const data = reactive({
   userId: useProfile().userId,
   roomId: '',
   messages: ref<response[]>([]),
+  file: ref<FileUpload[]>([]),
   transition: 'slide-y-reverse-transition',
   direction: 'top',
-  fab: false
+  fab: false,
+  isFile: false,
+  fileDetails: false,
+  useDetails: []
 })
 await queryDatabase({
   onResult: () => {
@@ -92,20 +147,59 @@ await queryDatabase({
     console.error('error :>> ', error)
   }
 })
+
+const findUsername = (userId : String) => {
+  const users = useQueryStore().users
+  const user = users.map((user:any) => user.id === userId ? user.name : null)
+  const username = user.find((user:any) => user !== null)
+  return username
+}
+
+const closeDialog = () => {
+  data.isFile = false
+  data.fileDetails = false
+}
 const chatContainer = ref<any>(null)
+
 const projects = await useQueryStore().projectById as projectById[]
+
+const getDetails = (items:any) => {
+  data.useDetails = items
+}
 
 const joinRoom = async (roomId: any) => {
   if (data.roomId !== roomId) {
     mutationsDatabase().getMessageByProject({
       onResult: (message: any) => {
-        console.log('message :>> ', message)
         message.map((message: any) =>
           data.messages.unshift({
             msg: message.message,
             projectId: message.projectId,
-            userId: message.userId
+            userId: findUsername(message.userId)
           }))
+        chatContainer.value.scrollTop = chatContainer.value.scrollHeight
+      },
+      onError (error: Error) {
+        console.error('error :>> ', error)
+      },
+      value: roomId
+    })
+    mutationsDatabase().getFileByProjectId({
+      onResult: (file: any) => {
+        data.file = []
+        console.log('file :>> ', file)
+        file.map((file: any) =>
+          data.file.unshift({
+            filename: file.fileName,
+            file: file.file,
+            createdAt: new Date(file.createdAt).toLocaleDateString(),
+            status: file.status,
+            comment: file.comment
+          }))
+        console.log('data.file :>> ', data.file)
+      },
+      onError (error: Error) {
+        console.error('error :>> ', error)
       },
       value: roomId
     })
@@ -117,10 +211,8 @@ const joinRoom = async (roomId: any) => {
   }
 }
 
-// const socket = socketQuery('cldekl9yf0006i1czhbjpky1c').connect()
 onMounted(() => {
   socket.connect()
-  // socket.emit('join', { data: 'cldekl9yf0006i1czhbjpky1c' })
   socket.on('connection', (socket) => {
     data.messages.push(socket)
   })
@@ -128,10 +220,11 @@ onMounted(() => {
     data.messages.push(socket)
   })
   socket.on('response', (msgBody: response) => {
-    data.messages.push(msgBody)
+    data.messages.push({ ...msgBody, userId: findUsername(msgBody.userId) })
     if (msgBody.userId !== data.userId) {
       playSound()
     }
+    chatContainer.value.scrollTop = chatContainer.value.scrollHeight
   })
 })
 const playSound = () => {
@@ -145,9 +238,19 @@ const sendMessage = () => {
     socket.emit('message', { userId: data.userId, msg: data.message, projectId: data.roomId })
     data.message = ''
     // window.scrollTo(0, document.body.scrollHeight)
-    // scoll the chatContainer  to buttom
     chatContainer.value.scrollTop = chatContainer.value.scrollHeight
   }
 }
+definePageMeta({ name: 'Chat', title: 'hello eieie' })
+
+useHead({
+  title: 'Chat Message',
+  meta: [
+    {
+      name: 'description',
+      content: 'Chat'
+    }
+  ]
+})
 
 </script>

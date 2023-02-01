@@ -113,6 +113,15 @@ export default defineComponent({
         }
       )
     }
+    useHead({
+      title: 'ISTUDY CMRU',
+      meta: [
+        {
+          name: 'description',
+          content: 'Chat'
+        }
+      ]
+    })
     return {
       errorMessages,
       formHasErrors,
@@ -121,8 +130,8 @@ export default defineComponent({
       data
     }
   }
-
 })
+
 definePageMeta({
   layout: 'login'
 })

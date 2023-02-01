@@ -12,4 +12,13 @@
 if (useProfile().role === 'USER') {
   useRouter().push('/welcome')
 }
+useHead({
+  title: 'DATABASE ISTUDY',
+  meta: [
+    {
+      name: 'description',
+      content: 'Chat'
+    }
+  ]
+})
 </script>

@@ -19,6 +19,7 @@
                 :items="users"
                 chips
                 closable-chips
+                :disabled="props2.textDialog === 'Edit'"
                 color="blue-grey-lighten-2"
                 item-title="name"
                 item-value="name"
@@ -104,11 +105,11 @@ import queryDatabase from '~~/libs/query/queryDatabase'
 import { useProfile } from '~~/store/profile'
 import { useQueryStore } from '~~/store/queryData'
 
-  enum Role {
-    ADMIN = 'ADMIN',
-    TEACHER = 'TEACHER',
-    USER = 'USER'
-  }
+// enum Role {
+//   ADMIN = 'ADMIN',
+//   TEACHER = 'TEACHER',
+//   USER = 'USER'
+// }
 const props2 = defineProps({
   textDialog: { type: String, default: '' },
   value: { type: Array, default: () => [] }
@@ -131,14 +132,15 @@ const data = reactive({
   status: ''
 })
 if (props2.value !== undefined) {
+  data.id = props2.value.id
   data.nameTH = props2.value.nameTH
   data.nameEN = props2.value.nameEN
-  data.status = props2.value.status
-  data.type = props2.value.projectType
+  data.status = props2.value.status?.name
+  data.type = props2.value.projectType?.name
 }
-const users = await useQueryStore().users
-const types = await useQueryStore().projectType
-const status = await useQueryStore().status
+const users = await useQueryStore().users as any
+const types = await useQueryStore().projectType as any
+const status = await useQueryStore().status as any
 data.status = status[0].name
 
 const emit = defineEmits(['dialogFalse'])
@@ -147,9 +149,8 @@ const closeDialog = () => {
 }
 
 const onSubmit = () => {
-  const newStatus = status.filter(val => val.name === data.status)[0].id
-  const newType = types.filter(val => val.name === data.type)[0].id
-  const value = []
+  const newStatus = status.filter((val:any) => val.name === data.status)[0].id
+  const newType = types.filter((val:any) => val.name === data.type)[0].id
 
   // for (let i = 0; i < data.selectUser.length; i++) {
   //   const newUser = users.filter(val => val.name === data.selectUser[i])[0].id
@@ -160,7 +161,7 @@ const onSubmit = () => {
     mutationsDatabase().createProject({
       onResult: (res :any) => {
         const value = data.selectUser.map((userName :any) => {
-          const newUser = users.find(val => val.name === userName)
+          const newUser = users.find((val:any) => val.name === userName) as any
           return { userId: newUser.id, projectId: res.data.createProject?.id }
         })
         mutationsDatabase().createUserProject({

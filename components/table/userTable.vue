@@ -124,6 +124,11 @@ const closeDialog = () => {
 }
 const users = await useQueryStore().users
 
+users.forEach((user:any) => {
+  user.createAt = new Date(user.createAt).toLocaleDateString()
+  user.updateAt = new Date(user.updateAt).toLocaleDateString()
+})
+
 const editItem = (item: any) => {
   data.dialogTitle = 'Edit'
   data.editedIndex = 0

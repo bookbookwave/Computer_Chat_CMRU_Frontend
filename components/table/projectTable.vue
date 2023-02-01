@@ -6,7 +6,7 @@
           <v-toolbar flat>
             <div class="grid grid-cols-3 md:grid-cols-6 min-w-full min-h-full align-center">
               <v-toolbar-title class="relative col-start-1 text-center">
-                Users
+                Project
               </v-toolbar-title>
               <v-divider
                 class="mx-4"
@@ -95,9 +95,9 @@ const data = reactive({
     { title: 'NameEN', key: 'nameEN', sortable: true },
     { title: 'NameTH', key: 'nameTH', sortable: true },
     { title: 'Status', key: 'status.name', sortable: true },
-    { title: 'Types', key: 'projectType.name', sortable: true },
-    { title: 'CreateAt', key: 'createdAt' },
-    { title: 'updateAt', key: 'updatedAt' }
+    { title: 'Types', key: 'projectType.name', sortable: true }
+    // { title: 'CreateAt', key: 'createdAt' }
+    // { title: 'updateAt', key: 'updatedAt' }
 
   ],
   editedIndex: -1,
@@ -123,8 +123,13 @@ const closeDialog = () => {
   data.dialog = false
   data.editedIndex = -1
 }
+
 const projects = await useQueryStore().projectById
-console.log('projects :>> ', projects)
+
+projects!.forEach((item: any) => {
+  item.createdAt = new Date(item.createdAt).toLocaleString()
+  console.log('item.createdAt :>> ', item.createdAt)
+})
 
 const editItem = (item: any) => {
   data.dialogTitle = 'Edit'

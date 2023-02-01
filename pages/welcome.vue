@@ -41,6 +41,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+
 const data = reactive({
   colors: [
     'indigo',
@@ -89,5 +90,14 @@ const data = reactive({
     }
   ]
 
+})
+useHead({
+  title: 'Welcome',
+  meta: [
+    {
+      name: 'description',
+      content: 'Chat'
+    }
+  ]
 })
 </script>

@@ -15,7 +15,7 @@ const queryDatabase = async ({ onResult, onError }:any) => {
     //     updateAt: string,
     //   }[]
     // }
-    // TODO : delete this ,It' useless
+    // TODO delete this ,It's useless
     await useAsyncQuery<any>(LIST_USERS)
 
     const users = await useAsyncQuery<any>(LIST_USERS)
