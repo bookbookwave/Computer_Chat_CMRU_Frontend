@@ -1,6 +1,17 @@
-import { LIST_PROJECTS, LIST_PROJECT_BY_ID, LIST_PROJECT_TYPES, LIST_STATUS, LIST_USERS } from '~~/apollo/query'
+import { useLogLogin } from '~~/store/logLogin'
+import {
+  LIST_BANNER,
+  LIST_BLOG_NEWS,
+  LIST_LOG_LOGIN,
+  LIST_LOG_LOGIN_BY_ID,
+  LIST_PROJECTS,
+  LIST_PROJECT_BY_ID,
+  LIST_PROJECT_TYPES,
+  LIST_STATUS, LIST_USERS
+} from '~~/apollo/query'
 import { useProfile } from '~~/store/profile'
 import { useQueryStore } from '~~/store/queryData'
+import { useBlogNews } from '~~/store/blogsNews'
 const queryDatabase = async ({ onResult, onError }:any) => {
   try {
     // type typeUsers = {
@@ -32,6 +43,18 @@ const queryDatabase = async ({ onResult, onError }:any) => {
 
     const projectType = await useAsyncQuery<any>(LIST_PROJECT_TYPES)
     useQueryStore().setProjectType(projectType.data.value?.getProjectType)
+
+    const getAllLog = await useAsyncQuery<any>(LIST_LOG_LOGIN)
+    useLogLogin().setAllLogLogin(getAllLog.data.value?.getLogs)
+
+    const getLogById = await useAsyncQuery<any>(LIST_LOG_LOGIN_BY_ID, { id: useProfile().userId })
+    useLogLogin().setLogByUser(getLogById.data.value?.getLogById)
+
+    const getAllBanner = await useAsyncQuery<any>(LIST_BANNER)
+    useQueryStore().setBanner(getAllBanner.data.value?.banners)
+
+    const getAllBlogNews = await useAsyncQuery<any>(LIST_BLOG_NEWS)
+    useBlogNews().setBlogNews(getAllBlogNews.data.value?.blogNews)
 
     onResult()
   } catch (error) {

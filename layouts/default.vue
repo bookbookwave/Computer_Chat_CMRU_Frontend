@@ -11,14 +11,16 @@
 
           <v-spacer />
 
-          <v-btn icon>
+          <!-- <v-btn icon>
             <v-icon>mdi-magnify</v-icon>
           </v-btn>
 
           <v-btn icon>
             <v-icon>mdi-heart</v-icon>
-          </v-btn>
+          </v-btn> -->
+
           <v-btn :icon="data.switch ? 'mdi-weather-night' : 'mdi-weather-sunny'" @click="toggleTheme" />
+
           <v-btn icon>
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
@@ -56,9 +58,7 @@
         </v-navigation-drawer>
 
         <v-main>
-          <v-container>
-            <slot />
-          </v-container>
+          <slot />
         </v-main>
       </v-layout>
     </v-card>
@@ -68,7 +68,7 @@
           Copyright © 2023 Department of Computer, CMRU. All rights reserved.
         </div>
         <div>
-          V.0.29.0
+          V.1.0.0
         </div>
       </div>
       <div class="flex justify-end min-w-full" />
@@ -85,6 +85,7 @@
 <script lang="ts" setup>
 import jwtDecode from 'jwt-decode'
 import { useTheme } from 'vuetify/lib/framework.mjs'
+import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
 import socket from '~~/plugins/socket.io'
 import { useEnv } from '~~/store/environment'
 import { useProfile } from '~~/store/profile'
@@ -115,7 +116,7 @@ const items = ref<any[]>(
     {
       icon: 'mdi-account',
       title: 'Profile',
-      to: '/Profile'
+      to: '/profile'
     }
   ]
 )
@@ -194,13 +195,22 @@ type typeToken ={
   avatar: string;
   name: string;
 }
-// TODO set Token
+
+// TODO : แก้ไขให้เป็นการดึงจาก cookie แทน
+
 const token = useCookie('token').value as any
+if (!token) {
+  useRouter().push('/')
+}
 const deToken = jwtDecode(token?.data.login) as typeToken
 data.email = deToken.email
 data.avatar = deToken.avatar
 data.name = deToken.name
 useProfile().setUser({ userId: deToken.userId, email: deToken.email, avatar: deToken.avatar, role: deToken.role, name: deToken.name })
+
+onBeforeMount(() => {
+  mutationsDatabase().createLogLogin({ onResult: () => {}, onError: () => {}, value: { id: deToken.userId } })
+})
 
 if (useProfile().role === 'ADMIN') {
   items.value.push(

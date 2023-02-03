@@ -1,6 +1,31 @@
-import { CREATE_FILE, CREATE_PROJECT, CREATE_PROJECT_TYPES, CREATE_STATUS, CREATE_USER, CREATE_USER_PROJECT, DELETE_PROJECT, DELETE_PROJECT_TYPES, DELETE_STATUS, DELETE_USER, LOGIN, REGISTER, UPDATE_PROJECT, UPDATE_PROJECT_TYPES, UPDATE_STATUS, UPDATE_USER } from '~~/apollo/mutation'
-import { LIST_FILE_UPLOAD_BY_PROJECT_ID, LIST_MESSAGES_BY_PROJECT_ID } from '~~/apollo/query'
+import {
+  CREATE_BANNER,
+  CREATE_BLOG_NEWS,
+  CREATE_FILE,
+  CREATE_LOG_LOGIN,
+  CREATE_PROJECT,
+  CREATE_PROJECT_TYPES,
+  CREATE_STATUS,
+  CREATE_USER,
+  CREATE_USER_PROJECT,
+  DELETE_BANNER,
+  DELETE_BLOG_NEWS,
+  DELETE_PROJECT,
+  DELETE_PROJECT_TYPES,
+  DELETE_STATUS,
+  DELETE_USER,
+  LOGIN,
+  REGISTER,
+  UPDATE_BANNER,
+  UPDATE_BLOG_NEWS,
+  UPDATE_PROJECT,
+  UPDATE_PROJECT_TYPES,
+  UPDATE_STATUS,
+  UPDATE_USER
+} from '~~/apollo/mutation'
+import { LIST_FILE_UPLOAD_BY_PROJECT_ID, LIST_LOG_LOGIN_BY_ID, LIST_MESSAGES_BY_PROJECT_ID } from '~~/apollo/query'
 import { useFileUpload } from '~~/store/fileUpload'
+import { useLogLogin } from '~~/store/logLogin'
 import { useMessage } from '~~/store/message'
 
 const mutationsDatabase = () => {
@@ -8,6 +33,7 @@ const mutationsDatabase = () => {
     try {
       const data = await useMutation(LOGIN).mutate(value)
       useCookie('token').value = JSON.stringify(data)
+
       onResult(data)
     } catch (error) {
       onError(error)
@@ -160,6 +186,71 @@ const mutationsDatabase = () => {
       onError(error)
     }
   }
+  const createLogLogin = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(CREATE_LOG_LOGIN).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const getLogById = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useAsyncQuery<any>(LIST_LOG_LOGIN_BY_ID, { value })
+      useLogLogin().setLogByUser(res.data.value?.getLogById)
+      onResult(res.data.value?.getLogLoginById)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const createBanner = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(CREATE_BANNER).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const updateBanner = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(UPDATE_BANNER).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const deleteBanner = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(DELETE_BANNER).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const createBlogNews = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(CREATE_BLOG_NEWS).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const updateBlogNews = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(UPDATE_BLOG_NEWS).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const deleteBlogNews = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(DELETE_BLOG_NEWS).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
 
   return {
     login,
@@ -187,7 +278,19 @@ const mutationsDatabase = () => {
 
     createFile,
 
-    getFileByProjectId
+    getFileByProjectId,
+
+    createLogLogin,
+
+    getLogById,
+
+    createBanner,
+    updateBanner,
+    deleteBanner,
+
+    createBlogNews,
+    updateBlogNews,
+    deleteBlogNews
   }
 }
 export default mutationsDatabase

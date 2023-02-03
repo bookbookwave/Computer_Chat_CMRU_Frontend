@@ -1,11 +1,5 @@
 <template>
   <v-no-ssr>
-    <!-- <v-dialog v-model="data.dialog" persistent>
-      <template #activator="{ props }">
-        <v-btn color="primary" v-bind="props">
-          {{ props2.textDialog }}
-        </v-btn>
-      </template> -->
     <v-card>
       <v-card-title class="pa-5">
         <span class="text-h5">{{ props2.textDialog }}</span>
@@ -14,32 +8,41 @@
         <v-container>
           <v-row>
             <v-col cols="12" sm="12" md="12">
-              <v-text-field v-model="data.name" label="Full name*" hint="example of persistent helper text" persistent-hint required />
+              <v-text-field
+                v-model="data.title"
+                prepend-icon="mdi-format-title"
+                label="Banner Name*"
+                hint="Banner name"
+                persistent-hint
+                required
+              />
             </v-col>
-            <v-col cols="12">
-              <v-text-field v-model="data.email" label="Email*" required />
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-text-field v-model="data.password" label="Password*" type="password" required />
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-text-field v-model="data.confirmPassword" label="Confirm Password*" type="password" required />
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-select v-model="data.role" :items="['ADMIN', 'TEACHER', 'USER']" :disabled="data.role === 'USER'" label="Role" required />
+            <v-col cols="12" sm="12" md="12">
+              <v-text-field
+                v-model="data.link"
+                prepend-icon="mdi-link"
+                label="Link to use with Banner*"
+                hint="Link with http:// or https://"
+                persistent-hint
+                required
+              />
             </v-col>
             <v-col cols="12" sm="6">
               <v-file-input
                 :rules="data.rules"
                 accept="image/png, image/jpeg, image/bmp"
-                placeholder="Pick an avatar"
+                placeholder="Pick an Image"
                 prepend-icon="mdi-camera"
-                label="Avatar"
+                label="Image"
                 @change="handleSelectAvatar($event)"
               />
             </v-col>
           </v-row>
         </v-container>
+        <small>*Image Resolution limit by 1280 x 360 / 21:6</small>
+        <br>
+        <small>1300 x 400</small>
+        <br>
         <small>*indicates required field</small>
       </v-card-text>
       <v-card-actions>
@@ -52,7 +55,7 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-    <!-- </v-dialog> -->
+    {{ props2.value }}
   </v-no-ssr>
 </template>
 
@@ -61,11 +64,6 @@ import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
 import queryDatabase from '~~/libs/query/queryDatabase'
 import { useEnv } from '~~/store/environment'
 
-enum Role {
-  ADMIN = 'ADMIN',
-  TEACHER = 'TEACHER',
-  USER = 'USER'
-}
 const props2 = defineProps({
   textDialog: { type: String, default: '' },
   value: { type: Object, default: () => {} }
@@ -78,52 +76,48 @@ const data = reactive({
     }
   ],
   id: '',
-  name: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-  role: Role.USER,
-  avatar: ref(undefined)
+  title: '',
+  image: '',
+  link: '',
+  selectUser: [],
+  timeout: null
 })
+
 if (props2.value !== undefined) {
   data.id = props2.value.id
-  data.name = props2.value.name
-  data.email = props2.value.email
-  data.role = props2.value.role
-}
-
-const newAvatar = ref()
-const handleSelectAvatar = (event:any) => {
-  const file = event.target.files[0]
-  const formData = new FormData()
-  formData.append('image', file)
-  newAvatar.value = formData
+  data.title = props2.value.title
+  data.image = props2.value.image
+  data.link = props2.value.link
 }
 
 const emit = defineEmits(['dialogFalse'])
 const closeDialog = () => {
   emit('dialogFalse')
 }
+const newImage = ref()
+const handleSelectAvatar = (event:any) => {
+  const file = event.target.files[0]
+  const formData = new FormData()
+  formData.append('image', file)
+  newImage.value = formData
+}
 
 const onSubmit = async () => {
-  // if (data.role === 'USER') {
-  //   data.role = Role.USER
-  // }
-  if (newAvatar.value !== undefined) {
+  if (newImage.value !== undefined) {
     const res = await $fetch(`${useEnv().BACKEND_API_URL}/upload/image`,
-      { method: 'POST', body: newAvatar.value })
+      { method: 'POST', body: newImage.value })
     if (props2.textDialog === 'New') {
-      mutationsDatabase().createUser({
+      mutationsDatabase().createBanner({
         onResult: () => {
           window.location.reload()
           data.dialog = false
           emit('dialogFalse')
         },
         onError: () => {},
-        value: { ...data, avatar: res }
+        value: { ...data, image: res }
       })
     } else {
-      mutationsDatabase().updateUser({
+      mutationsDatabase().updateBanner({
         onResult: () => {
           window.location.reload()
           queryDatabase({})
@@ -131,21 +125,21 @@ const onSubmit = async () => {
           emit('dialogFalse')
         },
         onError: () => {},
-        value: { ...data, avatar: res }
+        value: { ...data, image: res }
       })
     }
   } else if (props2.textDialog === 'New') {
-    mutationsDatabase().createUser({
+    mutationsDatabase().createBanner({
       onResult: () => {
         window.location.reload()
         data.dialog = false
         emit('dialogFalse')
       },
       onError: () => {},
-      value: { ...data, avatar: undefined }
+      value: { ...data, image: undefined }
     })
   } else {
-    mutationsDatabase().updateUser({
+    mutationsDatabase().updateBanner({
       onResult: () => {
         window.location.reload()
         queryDatabase({})
@@ -153,7 +147,7 @@ const onSubmit = async () => {
         emit('dialogFalse')
       },
       onError: () => {},
-      value: { ...data, avatar: undefined }
+      value: { ...data, image: undefined }
     })
   }
 }

@@ -1,12 +1,12 @@
 <template>
   <div>
     <v-no-ssr>
-      <v-data-table :headers="data.headers" :items="projects" class="elevation-1" :search="data.search">
+      <v-data-table :headers="data.headers" :items="banner" class="elevation-1" :search="data.search">
         <template #top>
           <v-toolbar flat>
             <div class="grid grid-cols-3 md:grid-cols-6 min-w-full min-h-full align-center">
               <v-toolbar-title class="relative col-start-1 text-center">
-                Project
+                Banner
               </v-toolbar-title>
               <v-divider
                 class="mx-4"
@@ -18,10 +18,10 @@
                   <v-dialog v-model="data.dialog" persistent>
                     <template #activator="{ props }">
                       <v-btn color="primary" v-bind="props">
-                        Add Project
+                        Add Banner
                       </v-btn>
                     </template>
-                    <form-project-form-dialog :value="data.sentEditData" :text-dialog="data.dialogTitle" @dialog-false="closeDialog" />
+                    <form-banner-form-dialog :value="data.sentEditData" :text-dialog="data.dialogTitle" @dialog-false="closeDialog" />
                   </v-dialog>
                 </v-no-ssr>
               </div>
@@ -72,35 +72,6 @@
             no data
           </div>
         </template>
-        <template #[`item.role`]="{ item }">
-          <v-chip :color="getColor(item.raw.role)">
-            {{ item.raw.role }}
-          </v-chip>
-        </template>
-        <template #[`item.nameEN`]="{ item }">
-          <v-no-ssr>
-            <v-dialog v-model="data.isDetails" persistent>
-              <template #activator="{ props }">
-                <v-list-item color="primary" v-bind="props" @click="onOpenDetails(item.raw)">
-                  {{ item.raw.nameEN }}
-                </v-list-item>
-              </template>
-              <modal-project-details :values="data.details" text-dialog="Project Details" @dialog-false="closeDialog" />
-            </v-dialog>
-          </v-no-ssr>
-        </template>
-        <!-- <template #[`item.nameTH`]="{ item }">
-          <v-no-ssr>
-            <v-dialog v-model="data.isDetails" persistent>
-              <template #activator="{ props }">
-                <v-list-item color="primary" v-bind="props" @click="onOpenDetails(item.raw)">
-                  {{ item.raw.nameTH }}
-                </v-list-item>
-              </template>
-              <modal-project-details :values="data.details" text-dialog="Project Details" @dialog-false="closeDialog" />
-            </v-dialog>
-          </v-no-ssr>
-        </template> -->
       </v-data-table>
     </v-no-ssr>
   </div>
@@ -108,18 +79,18 @@
 <script lang="ts" setup>
 import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
 import queryDatabase from '~~/libs/query/queryDatabase'
-import { useProfile } from '~~/store/profile'
 import { useQueryStore } from '~~/store/queryData'
+
 const data = reactive({
   dialog: false,
   dialogDelete: false,
   loading: true,
   search: '',
   headers: [
-    { title: 'NameEN', key: 'nameEN', sortable: true },
-    { title: 'NameTH', key: 'nameTH', sortable: true },
-    { title: 'Status', key: 'status.name', sortable: true },
-    { title: 'Types', key: 'projectType.name', sortable: true }
+    { title: 'Title', key: 'title', sortable: true },
+    { title: 'Link', key: 'link', sortable: true },
+    { title: 'image', key: 'image', sortable: true },
+    { title: 'Actions', key: 'actions', sortable: false }
     // { title: 'CreateAt', key: 'createdAt' }
     // { title: 'updateAt', key: 'updatedAt' }
 
@@ -132,9 +103,6 @@ const data = reactive({
   details: []
 })
 
-if (useProfile().role === 'ADMIN' || useProfile().role === 'TEACHER') {
-  data.headers.push({ title: 'Actions', key: 'actions', sortable: false })
-}
 await queryDatabase({
   onResult: () => {
   },
@@ -152,13 +120,9 @@ const closeDialog = () => {
   data.isDetails = false
 }
 
-const onOpenDetails = (item:any) => {
-  data.details = item
-}
+const banner = await useQueryStore().banner
 
-const projects = await useQueryStore().projectById
-
-projects!.forEach((item: any) => {
+banner!.forEach((item: any) => {
   item.createdAt = new Date(item.createdAt).toLocaleString()
 })
 
@@ -175,16 +139,13 @@ const deleteItem = (item: any) => {
 }
 
 const deleteItemConfirm = () => {
-  mutationsDatabase().deleteProject({ onResult: (res:any) => { console.log('res', res) }, value: data.deleteIndex })
-    projects!.splice(data.editedIndex, 1)
-    closeDelete()
+  mutationsDatabase().deleteBanner({ onResult: (res:any) => { console.log('res', res) }, value: data.deleteIndex })
+  banner!.splice(data.editedIndex, 1)
+  closeDelete()
 }
 
 const closeDelete = () => {
   data.dialogDelete = false
 }
 
-const getColor = (role: any) => {
-  if (role === 'ADMIN') { return 'red' } else if (role === 'TEACHER') { return 'orange' } else { return 'green' }
-}
 </script>

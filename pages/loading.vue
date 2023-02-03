@@ -3,6 +3,11 @@
 </template>
 <script lang="ts" setup>
 import queryDatabase from '~~/libs/query/queryDatabase'
+
+if (useCookie('token').value === null) {
+  useRouter().push('/login')
+}
+
 await queryDatabase({
   onResult: () => {
     useRouter().push('/welcome')
@@ -13,5 +18,14 @@ await queryDatabase({
 })
 definePageMeta({
   layout: 'loading'
+})
+useHead({
+  title: 'Loading ...',
+  meta: [
+    {
+      name: 'description',
+      content: 'Chat'
+    }
+  ]
 })
 </script>

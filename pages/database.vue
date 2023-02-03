@@ -9,6 +9,10 @@
 </template>
 <script lang="ts" setup>import { useProfile } from '~~/store/profile'
 
+if (useCookie('token').value === null) {
+  useRouter().push('/login')
+}
+
 if (useProfile().role === 'USER') {
   useRouter().push('/welcome')
 }

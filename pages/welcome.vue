@@ -8,6 +8,13 @@
         show-arrows="hover"
       >
         <v-carousel-item
+          v-for="item in data.banners"
+          :key="item.id"
+          :src="`${item.image.startsWith('http') ? item.image: `${data.url}/images/${item.image}`}`"
+          :title="item.title"
+          @click="onClick(item.link)"
+        />
+        <!-- <v-carousel-item
           src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
         />
         <v-carousel-item
@@ -24,23 +31,63 @@
               </div>
             </div>
           </v-sheet>
-        </v-carousel-item>
+        </v-carousel-item> -->
       </v-carousel>
     </div>
     <div>
-      <v-list
-        :items="data.items"
-        item-props
-        lines="three"
-      >
-        <template #subtitle="{ subtitle }">
-          <div v-html="subtitle" />
-        </template>
-      </v-list>
+      <v-container>
+        <div class="text-overline mt-3">
+          News
+        </div>
+        <v-list lines="three" class="d-flex flex-wrap-reverse">
+          <v-list-item
+            v-for="item in data.blogNews"
+            :key="item.id"
+            :title="item.title"
+            :subtitle="item.content"
+            @click="onClick(item.link)"
+          >
+            <template #title="{ title }">
+              <div class="text-h5">
+                {{ title }}
+              </div>
+              <div class="text-disabled text-overline">
+                {{ new Date(item.createdAt).toLocaleString() }}
+              </div>
+            </template>
+          </v-list-item>
+        </v-list>
+      </v-container>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
+import { useQueryStore } from '~~/store/queryData'
+import queryDatabase from '~~/libs/query/queryDatabase'
+import { useEnv } from '~~/store/environment'
+import { useBlogNews } from '~~/store/blogsNews'
+
+await queryDatabase({ onResult: () => {}, onError: () => {} })
+
+if (useCookie('token').value === null) {
+  useRouter().push('/login')
+}
+type banner = {
+  id: string,
+  title: string,
+  image: string,
+  link: string,
+  createdAt: string,
+  updatedAt: string,
+}
+type blogNews = {
+  id: string,
+  title: string,
+  content: string,
+  link: string,
+  createdAt: string,
+  updatedAt: string,
+}
 
 const data = reactive({
   colors: [
@@ -88,9 +135,20 @@ const data = reactive({
       title: 'Recipe to try',
       subtitle: '<span class="text-primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.'
     }
-  ]
+  ],
+  url: useEnv().BACKEND_API_URL,
+  banners: ref<banner[]>([]),
+  blogNews: ref<blogNews[]>([])
 
 })
+
+data.banners = useQueryStore().banner
+data.blogNews = useBlogNews().blogNews
+const onClick = (link:any) => {
+  window.open(`${link}`, '_blank')
+  // useRouter().push('/welcome')
+}
+
 useHead({
   title: 'Welcome',
   meta: [

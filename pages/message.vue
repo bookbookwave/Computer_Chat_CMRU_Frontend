@@ -48,7 +48,7 @@
       </div>
     </v-navigation-drawer>
     <div id="chatContainer" ref="chatContainer" class="overflow-auto scroll-m-0 mb-4">
-      <div v-if="data.messages.length === 0" class="flex align-center justify-center">
+      <div v-if="data.messages.length === 0" class="flex align-center justify-center min-h-screen">
         <h1>
           Please ... Select Chat Room
         </h1>
@@ -61,7 +61,7 @@
         >
           <!-- {{ msg }} -->
           <div class="text-caption text-disabled mx-4">
-            {{ msg.userId }}
+            {{ msg.userId === data.username ? 'You' : msg.userId }}
           </div>
           <v-chip class="ma-2" color="primary">
             {{ msg.msg }}
@@ -102,6 +102,10 @@ import { useProfile } from '~~/store/profile'
 import { useQueryStore } from '~~/store/queryData'
 import queryDatabase from '~~/libs/query/queryDatabase'
 import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
+
+if (useCookie('token').value === null) {
+  useRouter().push('/login')
+}
 
 type projectById = {
   id: string,
@@ -187,7 +191,6 @@ const joinRoom = async (roomId: any) => {
     mutationsDatabase().getFileByProjectId({
       onResult: (file: any) => {
         data.file = []
-        console.log('file :>> ', file)
         file.map((file: any) =>
           data.file.unshift({
             filename: file.fileName,
@@ -195,8 +198,9 @@ const joinRoom = async (roomId: any) => {
             createdAt: new Date(file.createdAt).toLocaleDateString(),
             status: file.status,
             comment: file.comment
-          }))
-        console.log('data.file :>> ', data.file)
+          }
+          )
+        )
       },
       onError (error: Error) {
         console.error('error :>> ', error)

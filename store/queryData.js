@@ -6,7 +6,8 @@ export const useQueryStore = defineStore('useQueryStore', {
     status: [],
     projectType: [],
     projectById: [],
-    fileUploadById: []
+    fileUploadById: [],
+    banner: []
   }),
   getters: {
 
@@ -29,6 +30,9 @@ export const useQueryStore = defineStore('useQueryStore', {
     },
     setFileUploadById (fileUploadId) {
       this.fileUploadById = fileUploadId
+    },
+    setBanner (banner) {
+      this.banner = banner
     }
   }
 })

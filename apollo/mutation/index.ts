@@ -20,3 +20,13 @@ export { default as DELETE_PROJECT } from './project/deleteProject'
 export { default as CREATE_USER_PROJECT } from './userProject/create'
 
 export { default as CREATE_FILE } from './fileUpload/create'
+
+export { default as CREATE_LOG_LOGIN } from './LogTime/create'
+
+export { default as CREATE_BANNER } from './banner/create'
+export { default as UPDATE_BANNER } from './banner/update'
+export { default as DELETE_BANNER } from './banner/delete'
+
+export { default as CREATE_BLOG_NEWS } from './blogNews/create'
+export { default as UPDATE_BLOG_NEWS } from './blogNews/update'
+export { default as DELETE_BLOG_NEWS } from './blogNews/delete'

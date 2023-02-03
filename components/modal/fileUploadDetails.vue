@@ -7,7 +7,7 @@
       <v-card-text>
         <v-container>
           <v-row>
-            <v-col cols="12" sm="8" md="12">
+            <v-col cols="12" sm="8" md="8">
               <v-text-field
                 :model-value="props2.values.filename"
                 prepend-icon="mdi-format-title"
@@ -18,7 +18,7 @@
                 required
               />
             </v-col>
-            <v-col cols="12" sm="4" md="12">
+            <v-col cols="12" sm="4" md="4">
               <v-btn @click="openFile(props2.values.file)">
                 Open File >>>
               </v-btn>
@@ -46,7 +46,7 @@
                 variant="solo"
                 :model-value="props2.values.createdAt"
                 prepend-icon="mdi-calendar-range"
-                label="Status"
+                label="DateTime"
                 readonly
                 persistent-hint
                 required
