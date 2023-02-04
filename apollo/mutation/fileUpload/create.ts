@@ -1,5 +1,5 @@
 export default gql`
-mutation createFileUpload($filename: String!, $file: String!, $projectId: String!, $comment: String!, $statusId: String!) {
+mutation createFileUpload($filename: String!, $file: String!, $projectId: String,$messageRoom: String, $comment: String!, $statusId: String!) {
   createFile(
     input: {
       fileName: $filename
@@ -7,6 +7,7 @@ mutation createFileUpload($filename: String!, $file: String!, $projectId: String
       projectId: $projectId
       comment: $comment
       statusId: $statusId
+      messageRoomId: $messageRoom
     }
   ) {
     id

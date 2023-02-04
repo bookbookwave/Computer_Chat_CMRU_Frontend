@@ -132,9 +132,14 @@ const deleteItem = (item: any) => {
 }
 
 const deleteItemConfirm = () => {
-  mutationsDatabase().deleteStatus({ onResult: (res:any) => { console.log('res', res) }, value: data.deleteIndex })
+  mutationsDatabase().deleteStatus({
+    onResult: () => {
       status!.splice(data.editedIndex, 1)
-      closeDelete()
+    },
+    onError: () => {},
+    value: data.deleteIndex
+  })
+  closeDelete()
 }
 
 const closeDelete = () => {

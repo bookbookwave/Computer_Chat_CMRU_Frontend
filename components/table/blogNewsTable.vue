@@ -5,7 +5,7 @@
         <template #top>
           <v-toolbar flat>
             <div class="grid grid-cols-3 md:grid-cols-6 min-w-full min-h-full align-center">
-              <v-toolbar-title class="relative col-start-1 text-center">
+              <v-toolbar-title class="relative col-start-1 text-center text-h5 font-weight-bold">
                 Blog News
               </v-toolbar-title>
               <v-divider
@@ -17,8 +17,8 @@
                 <v-no-ssr>
                   <v-dialog v-model="data.dialog" persistent>
                     <template #activator="{ props }">
-                      <v-btn color="primary" v-bind="props">
-                        Add Banner
+                      <v-btn color="primary" v-bind="props" prepend-icon="mdi-plus" rounded>
+                        BlogNews
                       </v-btn>
                     </template>
                     <form-blog-news-form-dialog :value="data.sentEditData" :text-dialog="data.dialogTitle" @dialog-false="closeDialog" />
@@ -139,7 +139,13 @@ const deleteItem = (item: any) => {
 }
 
 const deleteItemConfirm = () => {
-  mutationsDatabase().deleteBanner({ onResult: (res:any) => { console.log('res', res) }, value: data.deleteIndex })
+  mutationsDatabase().deleteBlogNews({
+    onResult: (res:any) => {
+      console.log('res', res)
+    },
+    onError: () => {},
+    value: { id: data.deleteIndex }
+  })
   blogNews!.splice(data.editedIndex, 1)
   closeDelete()
 }

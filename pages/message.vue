@@ -54,7 +54,7 @@
           </v-list>
         </v-col>
       </div>
-      <div v-if="data.roomId !== ''">
+      <div v-if="data.roomId !== '' || data.messageId !== ''">
         <v-divider />
         <div class="flex">
           <v-list-item lines="one" prepend-icon="mdi-file-document" title="File of This Project" />
@@ -123,11 +123,11 @@
             <v-text-field ref="input" v-model="data.message" label="Message" placeholder="What do you think?" />
             <v-dialog v-model="data.isFile" persistent>
               <template #activator="{ props }">
-                <v-btn v-if="data.roomId !== ''" value="recent1" v-bind="props" @click.prevent="playSound()">
+                <v-btn v-if="data.roomId !== '' || data.messageId !== ''" value="recent1" v-bind="props" @click.prevent="playSound()">
                   <v-icon>mdi-attachment</v-icon>
                 </v-btn>
               </template>
-              <form-file-upload text-dialog="Upload File" :room-id="data.roomId" @dialog-false="closeDialog" />
+              <form-file-upload text-dialog="Upload File" :message-room-id="data.messageId" :room-id="data.roomId" @dialog-false="closeDialog" />
             </v-dialog>
             <v-btn value="recent2" @click="sendMessage">
               <v-icon>mdi-send</v-icon>
@@ -318,7 +318,7 @@ const joinRoom = async (roomId: any, num: Number) => {
         },
         value: roomId
       })
-      mutationsDatabase().getFileByProjectId({
+      mutationsDatabase().getFileByRoomId({
         onResult: (file: any) => {
           data.file = []
           file.map((file: any) =>

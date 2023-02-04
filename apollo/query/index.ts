@@ -8,6 +8,7 @@ export { default as LIST_MESSAGES_BY_PROJECT_ID } from './message/getMessageByPr
 export { default as LIST_MESSAGES_BY_MESSAGE_ROOM_ID } from './message/getMessageByMessageRoom'
 
 export { default as LIST_FILE_UPLOAD_BY_PROJECT_ID } from './fileUpload/getFileByProjectId'
+export { default as LIST_FILE_UPLOAD_BY_ROOM } from './fileUpload/getFileByRoom'
 
 export { default as LIST_LOG_LOGIN } from './logLogin/getAllLog'
 export { default as LIST_LOG_LOGIN_BY_ID } from './logLogin/getLogById'

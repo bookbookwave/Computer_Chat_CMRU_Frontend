@@ -98,7 +98,8 @@ enum Role {
 }
 const props2 = defineProps({
   textDialog: { type: String, default: '' },
-  roomId: { type: String, default: '' }
+  roomId: { type: String, default: '' },
+  messageRoomId: { type: String, default: '' }
 })
 const data = reactive({
   dialog: false,
@@ -112,10 +113,12 @@ const data = reactive({
   comment: '',
   role: Role.USER,
   status: '',
-  avatar: ref(undefined)
+  avatar: ref(undefined),
+  messageRoom: ''
 })
-if (props2.roomId !== '') {
+if (props2.roomId !== '' || props2.messageRoomId !== '') {
   data.projectId = props2.roomId
+  data.messageRoom = props2.messageRoomId
 }
 
 const status = await useQueryStore().status as any
@@ -135,6 +138,7 @@ const closeDialog = () => {
 }
 
 const onSubmit = async () => {
+  console.log('data :>> ', data)
   const newStatus = status.filter((val:any) => val.name === data.status)[0].id
   // if (data.role === 'USER') {
   //   data.role = Role.USER
@@ -142,7 +146,6 @@ const onSubmit = async () => {
   if (newFile.value !== undefined) {
     const res = await $fetch(`${useEnv().BACKEND_API_URL}/upload/file`,
       { method: 'POST', body: newFile.value })
-    console.log('res :>> ', res)
     if (props2.textDialog === 'Upload File') {
       mutationsDatabase().createFile({
         onResult: () => {
@@ -151,20 +154,27 @@ const onSubmit = async () => {
           emit('dialogFalse')
         },
         onError: () => {},
-        value: { ...data, file: res, statusId: newStatus }
-      })
-    } else {
-      mutationsDatabase().updateUser({
-        onResult: () => {
-          window.location.reload()
-          queryDatabase({})
-          data.dialog = false
-          emit('dialogFalse')
-        },
-        onError: () => {},
-        value: { ...data, file: res, statusId: newStatus }
+        value: {
+          ...data,
+          file: res,
+          statusId: newStatus,
+          projectId: data.projectId === '' ? undefined : data.projectId,
+          messageRoom: data.messageRoom === '' ? undefined : data.messageRoom
+        }
       })
     }
+    // else {
+    //   mutationsDatabase().updateUser({
+    //     onResult: () => {
+    //       window.location.reload()
+    //       queryDatabase({})
+    //       data.dialog = false
+    //       emit('dialogFalse')
+    //     },
+    //     onError: () => {},
+    //     value: { ...data, file: res, statusId: newStatus }
+    //   })
+    // }
   }
 }
 </script>

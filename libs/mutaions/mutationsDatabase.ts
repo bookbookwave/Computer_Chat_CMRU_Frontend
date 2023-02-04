@@ -25,7 +25,7 @@ import {
   UPDATE_STATUS,
   UPDATE_USER
 } from '~~/apollo/mutation'
-import { LIST_FILE_UPLOAD_BY_PROJECT_ID, LIST_LOG_LOGIN_BY_ID, LIST_MESSAGES_BY_MESSAGE_ROOM_ID, LIST_MESSAGES_BY_PROJECT_ID, LIST_ROOM_BY_ROOM_ID } from '~~/apollo/query'
+import { LIST_FILE_UPLOAD_BY_PROJECT_ID, LIST_FILE_UPLOAD_BY_ROOM, LIST_LOG_LOGIN_BY_ID, LIST_MESSAGES_BY_MESSAGE_ROOM_ID, LIST_MESSAGES_BY_PROJECT_ID, LIST_ROOM_BY_ROOM_ID } from '~~/apollo/query'
 import { useFileUpload } from '~~/store/fileUpload'
 import { useLogLogin } from '~~/store/logLogin'
 import { useMessage } from '~~/store/message'
@@ -197,6 +197,15 @@ const mutationsDatabase = () => {
       onError(error)
     }
   }
+  const getFileByRoomId = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useAsyncQuery<any>(LIST_FILE_UPLOAD_BY_ROOM, { id: value })
+      useFileUpload().setFile(res.data.value?.getFilesByRoom)
+      onResult(res.data.value?.getFilesByRoom)
+    } catch (error) {
+      onError(error)
+    }
+  }
   const createLogLogin = async ({ onResult, onError, value }:any) => {
     try {
       const res = await useMutation(CREATE_LOG_LOGIN).mutate(value)
@@ -325,6 +334,7 @@ const mutationsDatabase = () => {
     createFile,
 
     getFileByProjectId,
+    getFileByRoomId,
 
     createLogLogin,
 

@@ -139,7 +139,13 @@ const deleteItem = (item: any) => {
 }
 
 const deleteItemConfirm = () => {
-  mutationsDatabase().deleteBanner({ onResult: (res:any) => { console.log('res', res) }, value: data.deleteIndex })
+  mutationsDatabase().deleteBanner({
+    onResult: (res:any) => {
+      console.log('res', res)
+    },
+    onError: () => {},
+    value: { id: data.deleteIndex }
+  })
   banner!.splice(data.editedIndex, 1)
   closeDelete()
 }
