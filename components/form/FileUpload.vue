@@ -91,11 +91,11 @@ import queryDatabase from '~~/libs/query/queryDatabase'
 import { useEnv } from '~~/store/environment'
 import { useQueryStore } from '~~/store/queryData'
 
-  enum Role {
-    ADMIN = 'ADMIN',
-    TEACHER = 'TEACHER',
-    USER = 'USER'
-  }
+enum Role {
+  ADMIN = 'ADMIN',
+  TEACHER = 'TEACHER',
+  USER = 'USER'
+}
 const props2 = defineProps({
   textDialog: { type: String, default: '' },
   roomId: { type: String, default: '' }

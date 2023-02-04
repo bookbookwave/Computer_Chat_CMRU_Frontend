@@ -3,10 +3,12 @@ import {
   CREATE_BLOG_NEWS,
   CREATE_FILE,
   CREATE_LOG_LOGIN,
+  CREATE_MESSAGE_ROOM,
   CREATE_PROJECT,
   CREATE_PROJECT_TYPES,
   CREATE_STATUS,
   CREATE_USER,
+  CREATE_USER_MESSAGE_ROOM,
   CREATE_USER_PROJECT,
   DELETE_BANNER,
   DELETE_BLOG_NEWS,
@@ -23,7 +25,7 @@ import {
   UPDATE_STATUS,
   UPDATE_USER
 } from '~~/apollo/mutation'
-import { LIST_FILE_UPLOAD_BY_PROJECT_ID, LIST_LOG_LOGIN_BY_ID, LIST_MESSAGES_BY_PROJECT_ID } from '~~/apollo/query'
+import { LIST_FILE_UPLOAD_BY_PROJECT_ID, LIST_LOG_LOGIN_BY_ID, LIST_MESSAGES_BY_MESSAGE_ROOM_ID, LIST_MESSAGES_BY_PROJECT_ID, LIST_ROOM_BY_ROOM_ID } from '~~/apollo/query'
 import { useFileUpload } from '~~/store/fileUpload'
 import { useLogLogin } from '~~/store/logLogin'
 import { useMessage } from '~~/store/message'
@@ -169,6 +171,15 @@ const mutationsDatabase = () => {
       onError(error)
     }
   }
+  const getMessageByRoom = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useAsyncQuery<any>(LIST_MESSAGES_BY_MESSAGE_ROOM_ID, { id: value })
+      useMessage().setMessage(res.data.value?.messagesByRoom)
+      onResult(res.data.value?.messagesByRoom)
+    } catch (error) {
+      onError(error)
+    }
+  }
   const createFile = async ({ onResult, onError, value }:any) => {
     try {
       const res = await useMutation(CREATE_FILE).mutate(value)
@@ -194,15 +205,7 @@ const mutationsDatabase = () => {
       onError(error)
     }
   }
-  const getLogById = async ({ onResult, onError, value }:any) => {
-    try {
-      const res = await useAsyncQuery<any>(LIST_LOG_LOGIN_BY_ID, { value })
-      useLogLogin().setLogByUser(res.data.value?.getLogById)
-      onResult(res.data.value?.getLogLoginById)
-    } catch (error) {
-      onError(error)
-    }
-  }
+
   const createBanner = async ({ onResult, onError, value }:any) => {
     try {
       const res = await useMutation(CREATE_BANNER).mutate(value)
@@ -251,6 +254,40 @@ const mutationsDatabase = () => {
       onError(error)
     }
   }
+  const createMessageRoom = async ({ onResult, onError }:any) => {
+    try {
+      const res = await useMutation(CREATE_MESSAGE_ROOM).mutate()
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const createManyUserMessageRoom = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useMutation(CREATE_USER_MESSAGE_ROOM).mutate(value)
+      onResult(res)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const getLogById = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useAsyncQuery<any>(LIST_LOG_LOGIN_BY_ID, { value })
+      useLogLogin().setLogByUser(res.data.value?.getLogById)
+      onResult(res.data.value?.getLogLoginById)
+    } catch (error) {
+      onError(error)
+    }
+  }
+  const getRoomByRoomId = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useAsyncQuery<any>(LIST_ROOM_BY_ROOM_ID, value)
+      useLogLogin().setLogByUser(res.data.value?.findMessageRoomByRoomId)
+      onResult(res.data.value?.findMessageRoomByRoomId)
+    } catch (error) {
+      onError(error)
+    }
+  }
 
   return {
     login,
@@ -272,9 +309,18 @@ const mutationsDatabase = () => {
     updateProject,
     deleteProject,
 
+    createBanner,
+    updateBanner,
+    deleteBanner,
+
+    createBlogNews,
+    updateBlogNews,
+    deleteBlogNews,
+
     createUserProject,
 
     getMessageByProject,
+    getMessageByRoom,
 
     createFile,
 
@@ -284,13 +330,11 @@ const mutationsDatabase = () => {
 
     getLogById,
 
-    createBanner,
-    updateBanner,
-    deleteBanner,
+    createMessageRoom,
 
-    createBlogNews,
-    updateBlogNews,
-    deleteBlogNews
+    createManyUserMessageRoom,
+
+    getRoomByRoomId
   }
 }
 export default mutationsDatabase

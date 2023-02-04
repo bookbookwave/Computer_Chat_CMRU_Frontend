@@ -6,8 +6,9 @@ export const useQueryStore = defineStore('useQueryStore', {
     status: [],
     projectType: [],
     projectById: [],
-    fileUploadById: [],
-    banner: []
+    banner: [],
+    RoomById: [],
+    RoomByRoomId: []
   }),
   getters: {
 
@@ -28,11 +29,14 @@ export const useQueryStore = defineStore('useQueryStore', {
     setProjectById (projectId) {
       this.projectById = projectId
     },
-    setFileUploadById (fileUploadId) {
-      this.fileUploadById = fileUploadId
-    },
     setBanner (banner) {
       this.banner = banner
+    },
+    setRoomByUserId (roomId) {
+      this.RoomById = roomId
+    },
+    setRoomByRoomId (roomId) {
+      this.RoomByRoomId = roomId
     }
   }
 })

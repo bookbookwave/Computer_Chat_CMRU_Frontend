@@ -7,6 +7,7 @@ import {
   LIST_PROJECTS,
   LIST_PROJECT_BY_ID,
   LIST_PROJECT_TYPES,
+  LIST_ROOM_BY_USER_ID,
   LIST_STATUS, LIST_USERS
 } from '~~/apollo/query'
 import { useProfile } from '~~/store/profile'
@@ -55,6 +56,9 @@ const queryDatabase = async ({ onResult, onError }:any) => {
 
     const getAllBlogNews = await useAsyncQuery<any>(LIST_BLOG_NEWS)
     useBlogNews().setBlogNews(getAllBlogNews.data.value?.blogNews)
+
+    const getRoomByUserId = await useAsyncQuery<any>(LIST_ROOM_BY_USER_ID, { id: useProfile().userId })
+    useQueryStore().setRoomByUserId(getRoomByUserId.data.value?.findMessageRoomByUserId)
 
     onResult()
   } catch (error) {
