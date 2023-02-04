@@ -5,7 +5,7 @@
         <template #top>
           <v-toolbar flat>
             <div class="grid grid-cols-3 md:grid-cols-6 min-w-full min-h-full align-center">
-              <v-toolbar-title class="relative col-start-1 text-center">
+              <v-toolbar-title class="relative col-start-1 text-center sm:text-subtitle-1 md:text-h5 font-weight-bold">
                 Project Type
               </v-toolbar-title>
               <v-divider
@@ -18,8 +18,8 @@
                 <v-no-ssr>
                   <v-dialog v-model="data.dialog" persistent>
                     <template #activator="{ props }">
-                      <v-btn color="primary" v-bind="props">
-                        Add Type
+                      <v-btn color="primary" v-bind="props" rounded prepend-icon="mdi-plus" class="text-button md:text-h6 font-weight-bold">
+                        Type
                       </v-btn>
                     </template>
                     <FormProjectTypeFormDialog :value="data.sentEditData" :text-dialog="data.dialogTitle" @dialog-false="closeDialog" />

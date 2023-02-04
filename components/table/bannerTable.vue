@@ -5,7 +5,7 @@
         <template #top>
           <v-toolbar flat>
             <div class="grid grid-cols-3 md:grid-cols-6 min-w-full min-h-full align-center">
-              <v-toolbar-title class="relative col-start-1 text-center">
+              <v-toolbar-title class="relative col-start-1 text-center font-weight-bold text-h5">
                 Banner
               </v-toolbar-title>
               <v-divider
@@ -17,8 +17,8 @@
                 <v-no-ssr>
                   <v-dialog v-model="data.dialog" persistent>
                     <template #activator="{ props }">
-                      <v-btn color="primary" v-bind="props">
-                        Add Banner
+                      <v-btn color="primary" v-bind="props" prepend-icon="mdi-plus" rounded class="text-h6 font-weight-bold">
+                        Banner
                       </v-btn>
                     </template>
                     <form-banner-form-dialog :value="data.sentEditData" :text-dialog="data.dialogTitle" @dialog-false="closeDialog" />

@@ -17,7 +17,13 @@
                 <v-no-ssr>
                   <v-dialog v-model="data.dialog" persistent>
                     <template #activator="{ props }">
-                      <v-btn color="primary" v-bind="props" prepend-icon="mdi-plus" rounded>
+                      <v-btn
+                        color="primary"
+                        v-bind="props"
+                        prepend-icon="mdi-plus"
+                        rounded
+                        class="text-subtitle-1 md:text-h6 font-weight-bold"
+                      >
                         BlogNews
                       </v-btn>
                     </template>

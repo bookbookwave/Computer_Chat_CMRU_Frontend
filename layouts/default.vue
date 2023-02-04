@@ -21,9 +21,36 @@
 
           <v-btn :icon="data.switch ? 'mdi-weather-night' : 'mdi-weather-sunny'" @click="toggleTheme" />
 
-          <v-btn icon>
+          <!-- <v-btn icon>
             <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+          </v-btn> -->
+          <v-menu
+            transition="slide-x-transition"
+          >
+            <template #activator="{ props }">
+              <!-- <v-btn
+                color="primary"
+                v-bind="props"
+              >
+                Slide X Transition
+              </v-btn> -->
+              <v-btn color="primary" icon v-bind="props">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+
+            <v-list>
+              <v-list-item
+                v-for="(item, i) in contact"
+                :key="i"
+                :to="item.to"
+                :prepend-icon="item.icon"
+                @click="onContentClick(item.title)"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-app-bar>
         <v-navigation-drawer v-model="data.drawer" temporary>
           <div class="flex align-center">
@@ -47,7 +74,6 @@
               @click="onContentClick(item.title)"
             />
             <v-list-item
-
               exact
               :to="'/'"
               prepend-icon="mdi-logout"
@@ -90,6 +116,13 @@ import socket from '~~/plugins/socket.io'
 import { useEnv } from '~~/store/environment'
 import { useProfile } from '~~/store/profile'
 import { Role } from '~~/types/graphql'
+const contact = ref<any[]>([
+  {
+    icon: 'mdi-contacts-outline',
+    title: 'Contact',
+    to: '/contact'
+  }
+])
 const theme = useTheme()
 const items = ref<any[]>(
   [
@@ -132,7 +165,7 @@ const data = reactive({
   fixed: false,
   rail: false,
   http: useEnv().BACKEND_API_URL,
-  title: '',
+  title: 'Welcome',
   items: [
     {
       icon: 'mdi-apps',

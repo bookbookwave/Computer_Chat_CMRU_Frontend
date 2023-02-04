@@ -60,7 +60,15 @@
           <v-list-item lines="one" prepend-icon="mdi-file-document" title="File of This Project" />
           <v-dialog v-model="data.isFile" persistent>
             <template #activator="{ props }">
-              <v-btn v-if="data.roomId !== ''" icon value="recent12" v-bind="props" @click.prevent="playSound()">
+              <v-btn
+                v-if="data.roomId !== '' || data.messageId !== ''"
+                class="mx-n4"
+                icon
+                value="recent12"
+                v-bind="props"
+                color="transparent"
+                @click.prevent="playSound()"
+              >
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </template>

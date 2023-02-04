@@ -5,7 +5,7 @@
         <template #top>
           <v-toolbar flat>
             <div class="grid grid-cols-3 md:grid-cols-6 min-w-full min-h-full align-center">
-              <v-toolbar-title class="relative col-start-1 text-center">
+              <v-toolbar-title class="relative col-start-1 text-center text-h5 font-weight-bold ">
                 Status
               </v-toolbar-title>
               <v-divider
@@ -18,8 +18,8 @@
                 <v-no-ssr>
                   <v-dialog v-model="data.dialog" persistent>
                     <template #activator="{ props }">
-                      <v-btn color="primary" v-bind="props">
-                        Add Status
+                      <v-btn color="primary" v-bind="props" prepend-icon="mdi-plus" rounded class="text-h6 font-weight-bold">
+                        Status
                       </v-btn>
                     </template>
                     <FormStatusFormDialog :value="data.sentEditData" :text-dialog="data.dialogTitle" @dialog-false="closeDialog" />
