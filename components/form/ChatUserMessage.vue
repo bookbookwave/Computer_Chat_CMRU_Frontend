@@ -22,7 +22,7 @@
                 <template #item="{ props, item }">
                   <v-list-item
                     hide-selected
-                    :prepend-avatar="`${(item.raw.avatar as string).startsWith('http') ? 'https://picsum.photos/300/300': `http://localhost:3000/images/${item.raw.avatar}` }`"
+                    :prepend-avatar="`${(item.raw.avatar as string).startsWith('http') ? 'https://picsum.photos/300/300': `${data.env}/images/${item.raw.avatar}` }`"
                     v-bind="props"
                     :title="item?.raw?.name"
                   />
@@ -60,7 +60,8 @@ const props2 = defineProps({
 const data = reactive({
   dialog: false,
   userId: useProfile().userId,
-  selectUser: ''
+  selectUser: '',
+  env: useRuntimeConfig().BACK_END_API_URL
 })
 const users = await useQueryStore().users as any
 

@@ -30,7 +30,7 @@
                 {{ slide }} Slide
               </div>
             </div>
-          </v-sheet>
+          </v-sheet>`
         </v-carousel-item> -->
       </v-carousel>
     </div>

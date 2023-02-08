@@ -8,7 +8,7 @@
         <v-container>
           <v-row>
             <v-col cols="12" sm="12" md="12">
-              <v-text-field v-model="data.name" label="Full status name*" hint="example of persistent helper text" persistent-hint required />
+              <v-text-field v-model="data.name" label="Full Status Name*" hint="example of persistent helper text" persistent-hint required />
             </v-col>
           </v-row>
         </v-container>

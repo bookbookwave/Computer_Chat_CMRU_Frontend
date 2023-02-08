@@ -1,9 +1,11 @@
 <template>
   <div>
     <v-no-ssr>
-      <table-user-table />
-      <table-status-table />
-      <table-project-type-table />
+      <v-container>
+        <table-user-table />
+        <table-status-table />
+        <table-project-type-table />
+      </v-container>
     </v-no-ssr>
   </div>
 </template>

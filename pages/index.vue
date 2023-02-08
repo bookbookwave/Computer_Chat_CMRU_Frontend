@@ -74,13 +74,13 @@ import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
 export default defineComponent({
   setup: () => {
     const data = reactive({
-      img2: 'http://localhost:3000/images/AFPa7OBUY-6498a1f6a228ee43f7d49e4010ca57ce839441524.jpg',
       img1: '/main-logo.png',
       show1: false,
       email: ref(null),
       password: ref(null),
       isLoading: false,
-      res: ref()
+      res: ref(),
+      env: useRuntimeConfig().BACK_END_API_URL
     })
     const errorMessages = ref('')
     const formHasErrors = ref(false)

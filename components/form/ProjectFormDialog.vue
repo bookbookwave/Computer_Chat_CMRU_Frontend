@@ -30,7 +30,7 @@
                 <template #chip="{ props, item }">
                   <v-chip
                     v-bind="props"
-                    :prepend-avatar="`${(item.raw.avatar as string).startsWith('http') ? 'https://picsum.photos/300/300': `http://localhost:3000/images/${item.raw.avatar}` }`"
+                    :prepend-avatar="`${(item.raw.avatar as string).startsWith('http') ? 'https://picsum.photos/300/300': `${data.env}/images/${item.raw.avatar}` }`"
                     :text="item.raw.name"
                   />
                 </template>
@@ -38,7 +38,7 @@
                 <template #item="{ props, item }">
                   <v-list-item
                     hide-selected
-                    :prepend-avatar="`${(item.raw.avatar as string).startsWith('http') ? 'https://picsum.photos/300/300': `http://localhost:3000/images/${item.raw.avatar}` }`"
+                    :prepend-avatar="`${(item.raw.avatar as string).startsWith('http') ? 'https://picsum.photos/300/300': `${data.env}/images/${item.raw.avatar}` }`"
                     v-bind="props"
                     :title="item?.raw?.name"
                   />
@@ -129,7 +129,8 @@ const data = reactive({
   selectUser: [],
   timeout: null,
   type: '',
-  status: ''
+  status: '',
+  env: useRuntimeConfig().BACK_END_API_URL
 })
 if (props2.value !== undefined) {
   data.id = props2.value.id
