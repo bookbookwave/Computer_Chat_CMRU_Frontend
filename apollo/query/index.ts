@@ -13,7 +13,7 @@ export { default as LIST_FILE_UPLOAD_BY_ROOM } from './fileUpload/getFileByRoom'
 export { default as LIST_LOG_LOGIN } from './logLogin/getAllLog'
 export { default as LIST_LOG_LOGIN_BY_ID } from './logLogin/getLogById'
 
-export { default as LIST_BANNER } from './banner/getAllBanner'
+export { default as LIST_BANNER } from './banner/getallbanner'
 
 export { default as LIST_BLOG_NEWS } from './blogNews/getAllBlogNews'
 
