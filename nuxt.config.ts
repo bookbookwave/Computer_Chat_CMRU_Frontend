@@ -37,7 +37,7 @@ export default defineNuxtConfig({
     clients: {
       default:
       {
-        httpEndpoint: 'http://localhost:3000/graphql',
+        httpEndpoint: 'https://d877-110-170-138-204.ap.ngrok.io/graphql',
         inMemoryCacheOptions: {}
       }
     }
