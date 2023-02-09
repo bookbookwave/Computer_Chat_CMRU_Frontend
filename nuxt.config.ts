@@ -37,18 +37,10 @@ export default defineNuxtConfig({
     clients: {
       default:
       {
-        httpEndpoint: process.env.BACKEND_API_URL || 'http://localhost:3000/graphql',
+        httpEndpoint: 'http://localhost:3000/graphql',
         inMemoryCacheOptions: {}
       }
     }
-  },
-  runtimeConfig: {
-    apiSecret: '123',
-    BACK_END_API_URL: process.env.BACKEND_API_URL || '',
-    // Public keys that are exposed to the client
-    public: {
-      apiBase: process.env.API_BASE || 'default_api_url',
-      otherUrl: process.env.OTHER_URL || 'default_other_url'
-    }
   }
+
 })

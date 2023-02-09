@@ -15,7 +15,7 @@
             rounded
             class="mx-4"
           >
-            <v-img cover src="https://scontent.fcnx3-1.fna.fbcdn.net/v/t1.6435-9/119982142_747989302729549_7228540641539369400_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeErcohFl6RHFopxj0s_GfBNe0DUAf3wMeR7QNQB_fAx5PPssi1RnwbtbpLJ_0SaWGLAXfFX-IS4jqh-QcsS2W1r&_nc_ohc=H-XZPiBPlH4AX8KNUcF&tn=ZVYivHrNn-SO3Vv5&_nc_ht=scontent.fcnx3-1.fna&oh=00_AfCwJGmJJw5cUAvfXCgaL55K0B80MbjH4rjUGR-_Xg8M8w&oe=6405F6CD" />
+            <v-img cover src="/contact_img.jpg" />
           </v-avatar>
           <v-list-item
             class="text-white mx-4"

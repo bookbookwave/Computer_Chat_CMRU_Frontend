@@ -131,11 +131,11 @@ const items = ref<any[]>(
       title: 'Welcome',
       to: '/welcome'
     },
-    {
-      icon: 'mdi-chart-bubble',
-      title: 'Inspire',
-      to: '/inspire'
-    },
+    // {
+    //   icon: 'mdi-chart-bubble',
+    //   title: 'Inspire',
+    //   to: '/inspire'
+    // },
     {
       icon: 'mdi-file-document-multiple',
       title: 'Project',

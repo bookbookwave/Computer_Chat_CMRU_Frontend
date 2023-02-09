@@ -55,7 +55,7 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-    {{ props2.value }}
+    <!-- {{ props2.value }} -->
   </v-no-ssr>
 </template>
 

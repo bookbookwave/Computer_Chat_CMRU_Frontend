@@ -87,7 +87,6 @@
 
 <script lang="ts" setup>
 import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
-import queryDatabase from '~~/libs/query/queryDatabase'
 import { useEnv } from '~~/store/environment'
 import { useQueryStore } from '~~/store/queryData'
 
