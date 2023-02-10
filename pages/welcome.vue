@@ -10,7 +10,7 @@
         <v-carousel-item
           v-for="item in data.banners"
           :key="item.id"
-          :src="`${item.image.startsWith('http') ? item.image: `${data.url}/images/${item.image}`}`"
+          :src="getImage(item.image)"
           :title="item.title"
           @click="onClick(item.link)"
         />
@@ -147,6 +147,11 @@ data.blogNews = useBlogNews().blogNews
 const onClick = (link:any) => {
   window.open(`${link}`, '_blank')
   // useRouter().push('/welcome')
+}
+const getImage = (image: string) => {
+  // const newImage = `${image.startsWith('http') ? image : useFetch(`${data.url}/images/${image}`, { headers: { 'Content-Type': 'image/png', 'User-Agent': '' } })}`
+  const newImage = `${image.startsWith('http') ? image : useFetch(`${data.url}/images/${image}`, { headers: { 'User-Agent': 'PostmanRuntime/7.30.1' } })}`
+  return newImage
 }
 
 useHead({
