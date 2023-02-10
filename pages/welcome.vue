@@ -149,9 +149,15 @@ const onClick = (link:any) => {
   // useRouter().push('/welcome')
 }
 const getImage = (image: string) => {
+  const url = useEnv().BACKEND_API_URL
   // const newImage = `${image.startsWith('http') ? image : useFetch(`${data.url}/images/${image}`, { headers: { 'Content-Type': 'image/png', 'User-Agent': '' } })}`
-  const newImage = `${image.startsWith('http') ? image : useFetch(`${data.url}/images/${image}`, { headers: { 'User-Agent': 'PostmanRuntime/7.30.1' } })}`
-  return newImage
+  if (image.startsWith('http')) {
+    return image
+  } else {
+    const { data } = useFetch(`${url}/images/${image}`, { headers: { 'Content-Type': 'image/png', 'User-Agent': '', '': '' } })
+    console.log('data :>> ', data)
+    return data
+  }
 }
 
 useHead({
