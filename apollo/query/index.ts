@@ -4,6 +4,8 @@ export { default as LIST_STATUS } from './status/getStatus'
 export { default as LIST_PROJECT_TYPES } from './project/getProjectType'
 export { default as LIST_PROJECT_BY_ID } from './project/getProjectById'
 
+export { default as LIST_USERS_NO_PROJECT } from './user/getUserNoProject'
+
 export { default as LIST_MESSAGES_BY_PROJECT_ID } from './message/getMessageByProject'
 export { default as LIST_MESSAGES_BY_MESSAGE_ROOM_ID } from './message/getMessageByMessageRoom'
 

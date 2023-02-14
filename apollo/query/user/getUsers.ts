@@ -5,6 +5,7 @@ query getUser{
     name
     email
     # password
+    credentialId
     role
     avatar
     createAt

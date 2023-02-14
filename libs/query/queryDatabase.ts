@@ -8,7 +8,9 @@ import {
   LIST_PROJECT_BY_ID,
   LIST_PROJECT_TYPES,
   LIST_ROOM_BY_USER_ID,
-  LIST_STATUS, LIST_USERS
+  LIST_STATUS,
+  LIST_USERS,
+  LIST_USERS_NO_PROJECT
 } from '~~/apollo/query'
 import { useProfile } from '~~/store/profile'
 import { useQueryStore } from '~~/store/queryData'
@@ -33,11 +35,15 @@ const queryDatabase = async ({ onResult, onError }:any) => {
     const users = await useAsyncQuery<any>(LIST_USERS)
     useQueryStore().setUser(users.data.value?.users)
 
+    const usersNoProject = await useAsyncQuery<any>(LIST_USERS_NO_PROJECT)
+    useQueryStore().setUserNoProject(usersNoProject.data.value?.usersNoProject)
+
     const project = await useAsyncQuery<any>(LIST_PROJECTS)
     useQueryStore().setProject(project.data.value?.projects)
 
     const projectById = await useAsyncQuery<any>(LIST_PROJECT_BY_ID, { id: useProfile().userId })
     useQueryStore().setProjectById(projectById.data.value?.projectsById)
+    console.log('projectById.data.value.projectById :>> ', projectById)
 
     const status = await useAsyncQuery<any>(LIST_STATUS)
     useQueryStore().setStatus(status.data.value?.getStatus)

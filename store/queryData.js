@@ -8,7 +8,8 @@ export const useQueryStore = defineStore('useQueryStore', {
     projectById: [],
     banner: [],
     RoomById: [],
-    RoomByRoomId: []
+    RoomByRoomId: [],
+    userNoProject: []
   }),
   getters: {
 
@@ -37,6 +38,9 @@ export const useQueryStore = defineStore('useQueryStore', {
     },
     setRoomByRoomId (roomId) {
       this.RoomByRoomId = roomId
+    },
+    setUserNoProject (users) {
+      this.userNoProject = users
     }
   }
 })

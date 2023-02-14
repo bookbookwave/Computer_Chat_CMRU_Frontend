@@ -15,15 +15,15 @@
             </v-col>
             <v-col cols="12" sm="6">
               <v-autocomplete
-                v-model="data.selectUser"
-                :items="users"
+                v-model="data.selectTeacher"
+                :items="getTeacher"
                 chips
                 closable-chips
                 :disabled="props2.textDialog === 'Edit'"
                 color="blue-grey-lighten-2"
                 item-title="name"
                 item-value="name"
-                label="Select Person"
+                label="Select Teacher"
                 multiple
                 hint="Don't forget, add yourself*"
               >
@@ -48,6 +48,39 @@
             </v-col>
             <v-col cols="12" sm="6">
               <v-autocomplete
+                v-model="data.selectUser"
+                :items="getUserNoProject()"
+                chips
+                closable-chips
+                :disabled="props2.textDialog === 'Edit'"
+                color="blue-grey-lighten-2"
+                item-title="name"
+                item-value="name"
+                label="Select Student"
+                multiple
+                hint="Don't forget, add yourself*"
+              >
+                <template #chip="{ props, item }">
+                  <v-chip
+                    v-bind="props"
+                    :prepend-avatar="`${(item.raw.avatar as string).startsWith('http') ? 'https://picsum.photos/300/300': `${data.env}/images/${item.raw.avatar}` }`"
+                    :text="item.raw.name"
+                  />
+                </template>
+
+                <template #item="{ props, item }">
+                  <v-list-item
+                    hide-selected
+                    :prepend-avatar="`${(item.raw.avatar as string).startsWith('http') ? 'https://picsum.photos/300/300': `${data.env}/images/${item.raw.avatar}` }`"
+                    v-bind="props"
+                    :title="item?.raw?.name"
+                  />
+                  <!-- <v-checkbox :label="item?.raw?.name" v-bind="props" /> -->
+                </template>
+              </v-autocomplete>
+            </v-col>
+            <!-- <v-col cols="12" sm="6">
+              <v-autocomplete
                 v-model="data.status"
                 :items="status"
                 :value="data.status"
@@ -64,7 +97,7 @@
                   />
                 </template>
               </v-autocomplete>
-            </v-col>
+            </v-col> -->
             <v-col cols="12" sm="12">
               <v-autocomplete
                 v-model="data.type"
@@ -130,7 +163,8 @@ const data = reactive({
   timeout: null,
   type: '',
   status: '',
-  env: useRuntimeConfig().BACK_END_API_URL
+  env: useRuntimeConfig().BACK_END_API_URL,
+  selectTeacher: []
 })
 if (props2.value !== undefined) {
   data.id = props2.value.id
@@ -142,6 +176,7 @@ if (props2.value !== undefined) {
 const users = await useQueryStore().users as any
 const types = await useQueryStore().projectType as any
 const status = await useQueryStore().status as any
+const userNoProject = await useQueryStore().userNoProject as any
 data.status = status[0].name
 
 const emit = defineEmits(['dialogFalse'])
@@ -149,20 +184,32 @@ const closeDialog = () => {
   emit('dialogFalse')
 }
 
+const getUserNoProject = () => {
+  return userNoProject.filter((val:any) => val.role === 'USER')
+}
+
+// const getUser = () => {
+//   const oldUser = users.filter((val:any) => val.role === 'USER')
+//   return oldUser
+// }
+
+const getTeacher = users.filter((val:any) => val.role === 'TEACHER' || val.role === 'ADMIN')
+
 const onSubmit = () => {
   const newStatus = status.filter((val:any) => val.name === data.status)[0].id
   const newType = types.filter((val:any) => val.name === data.type)[0].id
-
-  // for (let i = 0; i < data.selectUser.length; i++) {
-  //   const newUser = users.filter(val => val.name === data.selectUser[i])[0].id
-  //   value.push({ userId: newUser, projectId })
-  // }
 
   if (props2.textDialog === 'New') {
     mutationsDatabase().createProject({
       onResult: (res :any) => {
         const value = data.selectUser.map((userName :any) => {
+          const newTeacher = data.selectTeacher.map((teacher:any) => {
+            const newTeacher = users.find((val:any) => val.name === teacher) as any
+            return newTeacher
+          })
           const newUser = users.find((val:any) => val.name === userName) as any
+          newUser.push(newTeacher)
+          console.log('newUser :>> ', newUser)
           return { userId: newUser.id, projectId: res.data.createProject?.id }
         })
         mutationsDatabase().createUserProject({

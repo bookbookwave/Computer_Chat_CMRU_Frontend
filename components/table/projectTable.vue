@@ -13,8 +13,20 @@
                 inset
                 vertical
               />
-              <div class="relative col-start-3 md:col-start-6">
+              <div v-if="data.role === 'TEACHER' || data.role === 'ADMIN'" class="relative col-start-3 md:col-start-6">
                 <v-no-ssr>
+                  <v-dialog v-model="data.dialog" persistent>
+                    <template #activator="{ props }">
+                      <v-btn color="primary" v-bind="props">
+                        Add Project
+                      </v-btn>
+                    </template>
+                    <form-project-form-dialog :value="data.sentEditData" :text-dialog="data.dialogTitle" @dialog-false="closeDialog" />
+                  </v-dialog>
+                </v-no-ssr>
+              </div>
+              <div v-if="data.role === 'USER'" class="relative col-start-3 md:col-start-6">
+                <v-no-ssr v-if="projects.length === 0 ">
                   <v-dialog v-model="data.dialog" persistent>
                     <template #activator="{ props }">
                       <v-btn color="primary" v-bind="props">
@@ -103,6 +115,7 @@
         </template> -->
       </v-data-table>
     </v-no-ssr>
+    {{ projects }}
   </div>
 </template>
 <script lang="ts" setup>
@@ -124,6 +137,7 @@ const data = reactive({
     // { title: 'updateAt', key: 'updatedAt' }
 
   ],
+  role: useProfile().role,
   editedIndex: -1,
   deleteIndex: '',
   dialogTitle: 'New',

@@ -47,13 +47,15 @@
               />
             </form>
           </v-card-text>
-          <div class="flex justify-center align-center">
+          <!-- <div class="flex justify-center align-center">
             <div class="mx-4">
               Do you have any Account ?
             </div>
             <form-register-button />
+          </div> -->
+          <div class="text-center">
+            {{ data.res }}
           </div>
-          {{ data.res }}
           <v-card-actions class="flex justify-center mb-4 mt-2">
             <v-btn
               :loading="data.isLoading"
