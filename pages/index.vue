@@ -12,6 +12,9 @@
           <div class="text-h3 text-center">
             ISTUDY CMRU
           </div>
+          <div class="text-center">
+            Department of Computer, CMRU
+          </div>
         </div>
       </div>
       <div class=" grid align-center max-w-2xl">

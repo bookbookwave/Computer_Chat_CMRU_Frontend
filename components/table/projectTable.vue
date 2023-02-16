@@ -25,7 +25,7 @@
                   </v-dialog>
                 </v-no-ssr>
               </div>
-              <div v-if="data.role === 'USER'" class="relative col-start-3 md:col-start-6">
+              <div v-if="data.role === 'STUDENT'" class="relative col-start-3 md:col-start-6">
                 <v-no-ssr v-if="projects.length === 0 ">
                   <v-dialog v-model="data.dialog" persistent>
                     <template #activator="{ props }">
@@ -115,7 +115,6 @@
         </template> -->
       </v-data-table>
     </v-no-ssr>
-    {{ projects }}
   </div>
 </template>
 <script lang="ts" setup>
@@ -131,7 +130,7 @@ const data = reactive({
   headers: [
     { title: 'NameEN', key: 'nameEN', sortable: true },
     { title: 'NameTH', key: 'nameTH', sortable: true },
-    { title: 'Status', key: 'status.name', sortable: true },
+    { title: 'Progress', key: 'status.name', sortable: true },
     { title: 'Types', key: 'projectType.name', sortable: true }
     // { title: 'CreateAt', key: 'createdAt' }
     // { title: 'updateAt', key: 'updatedAt' }
@@ -189,7 +188,11 @@ const deleteItem = (item: any) => {
 }
 
 const deleteItemConfirm = () => {
-  mutationsDatabase().deleteProject({ onResult: (res:any) => { console.log('res', res) }, value: data.deleteIndex })
+  mutationsDatabase().deleteProject({
+    onResult: () => {},
+    onError: (error : Error) => { console.error(error) },
+    value: { id: data.deleteIndex }
+  })
     projects!.splice(data.editedIndex, 1)
     closeDelete()
 }

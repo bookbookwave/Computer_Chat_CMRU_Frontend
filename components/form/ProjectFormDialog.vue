@@ -74,6 +74,7 @@
                     :prepend-avatar="`${(item.raw.avatar as string).startsWith('http') ? 'https://picsum.photos/300/300': `${data.env}/images/${item.raw.avatar}` }`"
                     v-bind="props"
                     :title="item?.raw?.name"
+                    :subtitle="item?.raw?.credentialId"
                   />
                   <!-- <v-checkbox :label="item?.raw?.name" v-bind="props" /> -->
                 </template>
@@ -84,7 +85,7 @@
                 v-model="data.status"
                 :items="status"
                 :value="data.status"
-                :disabled="data.role === 'USER'"
+                :disabled="data.role === 'STUDENT'"
                 color="blue-grey-lighten-2"
                 item-title="name"
                 item-value="name"
@@ -141,7 +142,7 @@ import { useQueryStore } from '~~/store/queryData'
 // enum Role {
 //   ADMIN = 'ADMIN',
 //   TEACHER = 'TEACHER',
-//   USER = 'USER'
+//   STUDENT = 'STUDENT'
 // }
 const props2 = defineProps({
   textDialog: { type: String, default: '' },
@@ -151,7 +152,7 @@ const data = reactive({
   dialog: false,
   rules: [
     (value: any) => {
-      return !value || !value.length || value[0].size < 2000000 || 'Avatar size should be less than 2 MB!'
+      return !value || !value.length || value[0].size < 6000000 || 'Avatar size should be less than 6 MB!'
     }
   ],
   role: useProfile().role,
@@ -185,57 +186,61 @@ const closeDialog = () => {
 }
 
 const getUserNoProject = () => {
-  return userNoProject.filter((val:any) => val.role === 'USER')
+  return userNoProject.filter((val:any) => val.role === 'STUDENT')
 }
 
 // const getUser = () => {
-//   const oldUser = users.filter((val:any) => val.role === 'USER')
+//   const oldUser = users.filter((val:any) => val.role === 'STUDENT')
 //   return oldUser
 // }
 
 const getTeacher = users.filter((val:any) => val.role === 'TEACHER' || val.role === 'ADMIN')
 
 const onSubmit = () => {
-  const newStatus = status.filter((val:any) => val.name === data.status)[0].id
-  const newType = types.filter((val:any) => val.name === data.type)[0].id
+  try {
+    const newStatus = status.filter((val:any) => val.name === data.status)[0].id
+    const newType = types.filter((val:any) => val.name === data.type)[0].id
 
-  if (props2.textDialog === 'New') {
-    mutationsDatabase().createProject({
-      onResult: (res :any) => {
-        const value = data.selectUser.map((userName :any) => {
-          const newTeacher = data.selectTeacher.map((teacher:any) => {
-            const newTeacher = users.find((val:any) => val.name === teacher) as any
-            return newTeacher
+    if (props2.textDialog === 'New') {
+      mutationsDatabase().createProject({
+        onResult: (res :any) => {
+          const value = data.selectUser.map((userName :any) => {
+            const newUser = users.find((val:any) => val.name === userName) as any
+            return { userId: newUser.id, projectId: res.data.createProject?.id }
           })
-          const newUser = users.find((val:any) => val.name === userName) as any
-          newUser.push(newTeacher)
-          console.log('newUser :>> ', newUser)
-          return { userId: newUser.id, projectId: res.data.createProject?.id }
-        })
-        mutationsDatabase().createUserProject({
-          onResult: () => {
-            window.location.reload()
-          },
-          onError: () => {},
-          value
-        })
-        data.dialog = false
-        emit('dialogFalse')
-      },
-      onError: () => {},
-      value: { ...data, statusId: newStatus, typeId: newType }
-    })
-  } else {
-    mutationsDatabase().updateProject({
-      onResult: () => {
-        window.location.reload()
-        queryDatabase({})
-        data.dialog = false
-        emit('dialogFalse')
-      },
-      onError: () => {},
-      value: { ...data, statusId: newStatus, typeId: newType }
-    })
+          data.selectTeacher.map((teacher:any) => {
+            const newTeacher = users.find((val:any) => val.name === teacher) as any
+            return value.push({ userId: newTeacher.id, projectId: res.data.createProject?.id })
+          })
+          mutationsDatabase().createUserProject({
+            onResult: () => {
+              window.location.reload()
+            },
+            onError: () => {},
+            value
+          })
+          data.dialog = false
+          emit('dialogFalse')
+        },
+        onError: (error:Error) => {
+          console.error('error :>> ', error)
+        },
+        value: { ...data, statusId: newStatus, typeId: newType }
+      })
+    } else {
+      mutationsDatabase().updateProject({
+        onResult: () => {
+          window.location.reload()
+          queryDatabase({})
+          data.dialog = false
+          emit('dialogFalse')
+        },
+        onError: () => {},
+        value: { ...data, statusId: newStatus, typeId: newType }
+      })
+    }
+  } catch (error) {
+    console.error(error)
   }
 }
 </script>

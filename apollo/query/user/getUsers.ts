@@ -3,9 +3,9 @@ query getUser{
   users {
     id
     name
+    credentialId
     email
     # password
-    credentialId
     role
     avatar
     createAt

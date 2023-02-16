@@ -34,7 +34,7 @@
                 variant="solo"
                 :model-value="props2.values.status.name"
                 prepend-icon="mdi-list-status"
-                label="Status"
+                label="Project Progress"
                 readonly
                 persistent-hint
                 required
@@ -50,6 +50,9 @@
                 persistent-hint
                 required
               />
+            </v-col>
+            <v-col cols="12" sm="12" md="12">
+              <v-textarea :model-value="data.userProject" readonly prepend-icon="mdi-account" label="Person Of Project" variant="outlined" />
             </v-col>
             <v-col v-if="data.fileUpload.length" cols="12" sm="12" md="12">
               <v-list density="compact" nav>
@@ -120,11 +123,11 @@ const data = reactive({
   url: useEnv().BACKEND_API_URL,
   fileUpload: ref<FileUpload[]>([]),
   fileDetails: false,
-  useDetails: []
-
+  useDetails: [],
+  userProject: []
 })
+
 onBeforeMount(() => {
-  console.log('done :>> ')
   mutationsDatabase().getFileByProjectId({
     onResult: (item:any) => {
       item.map((file: any) =>
@@ -142,6 +145,15 @@ onBeforeMount(() => {
     onError: (error:Error) => { console.error(error) },
     value: props2.values.id
   })
+})
+
+mutationsDatabase().getUserProject({
+  onResult: (item:any) => {
+    data.userProject = item.map((user:any) => `${user.user.name} (${user.user.credentialId})\n`)
+    // console.log(item)
+  },
+  onError: (error:Error) => { console.error(error) },
+  value: props2.values.id
 })
 
 const getDetails = (items:any) => {

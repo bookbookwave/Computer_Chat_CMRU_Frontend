@@ -155,7 +155,6 @@ const getImage = (image: string) => {
     return image
   } else {
     const { data } = useFetch(`${url}/images/${image}`, { headers: { 'Content-Type': 'image/png', 'User-Agent': '', '': '' } })
-    console.log('data :>> ', data)
     return data
   }
 }

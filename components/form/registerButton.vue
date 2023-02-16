@@ -96,7 +96,7 @@ const data = reactive({
   avatar: ref(),
   rules: [
     (value: any) => {
-      return !value || !value.length || value[0].size < 2000000 || 'Avatar size should be less than 2 MB!'
+      return !value || !value.length || value[0].size < 6000000 || 'Avatar size should be less than 6 MB!'
     }
   ],
   alertBox: false,

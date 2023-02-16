@@ -5,15 +5,17 @@ export const useProfile = defineStore('Profile', {
     email: '',
     avatar: '',
     role: '',
-    name: ''
+    name: '',
+    credentialId: ''
   }),
   actions: {
-    setUser ({ userId, email, avatar, role, name }) {
+    setUser ({ userId, email, avatar, role, name, credentialId }) {
       this.userId = userId
       this.email = email
       this.avatar = avatar
       this.role = role
       this.name = name
+      this.credentialId = credentialId
     }
   }
 })

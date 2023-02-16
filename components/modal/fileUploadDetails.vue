@@ -35,7 +35,7 @@
                 variant="solo"
                 :model-value="props2.values.status.name"
                 prepend-icon="mdi-list-status"
-                label="Status"
+                label="Project Progress"
                 readonly
                 persistent-hint
                 required

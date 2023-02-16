@@ -11,7 +11,7 @@
             <v-col cols="12" sm="12" md="12">
               <v-autocomplete
                 v-model="data.selectUser"
-                :items="users"
+                :items="newUserList()"
                 :disabled="props2.textDialog === 'Edit'"
                 color="blue-grey-lighten-2"
                 item-title="name"
@@ -54,7 +54,8 @@ import { useQueryStore } from '~~/store/queryData'
 
 const props2 = defineProps({
   textDialog: { type: String, default: '' },
-  value: { type: Array, default: () => [] }
+  value: { type: Array, default: () => [] },
+  listRoom: { type: Array, default: () => [] }
 })
 
 const data = reactive({
@@ -64,6 +65,16 @@ const data = reactive({
   env: useRuntimeConfig().BACK_END_API_URL
 })
 const users = await useQueryStore().users as any
+
+const newUserList = () => {
+  const already = props2.listRoom.map((val:any) => val.userId)
+  console.log('already :>> ', already)
+  const newUser = users.filter((user:any) => {
+    console.log('user :>> ', user)
+    return !already.includes(user.id)
+  })
+  return newUser
+}
 
 const emit = defineEmits(['dialogFalse'])
 const closeDialog = () => {
@@ -87,8 +98,7 @@ const onSubmit = () => {
         ]
 
         mutationsDatabase().createManyUserMessageRoom({
-          onResult: (res:any) => {
-            console.log('res :>> ', res)
+          onResult: () => {
             window.location.reload()
             data.dialog = false
             emit('dialogFalse')
@@ -97,7 +107,7 @@ const onSubmit = () => {
           value: { data: value }
         })
       } catch (error) {
-        console.log('error :>> ', error)
+        console.error('error :>> ', error)
       }
     },
     onError: () => {}

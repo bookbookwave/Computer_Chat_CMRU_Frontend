@@ -34,7 +34,7 @@
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
               </template>
-              <form-chat-user-message text-dialog="New Chat" @dialog-false="closeDialog" />
+              <form-chat-user-message text-dialog="New Chat" :list-room="data.listRoom" @dialog-false="closeDialog" />
             </v-dialog>
           </v-no-ssr>
         </div>
@@ -238,7 +238,6 @@ await queryDatabase({
   }
 })
 watch(() => data.listRoom, (val:any) => {
-  console.log('val :>> ', val)
   data.listRoom = val
 })
 

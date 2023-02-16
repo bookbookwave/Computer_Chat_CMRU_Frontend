@@ -26,7 +26,7 @@
               <v-text-field v-model="data.confirmPassword" label="Confirm Password*" type="password" required />
             </v-col>
             <v-col cols="12" sm="6">
-              <v-select v-model="data.role" :items="['ADMIN', 'TEACHER', 'USER']" :disabled="data.role === 'USER'" label="Role" required />
+              <v-select v-model="data.role" :items="['ADMIN', 'TEACHER', 'STUDENT']" :disabled="data.role === 'STUDENT'" label="Role" required />
             </v-col>
             <v-col cols="12" sm="6">
               <v-file-input
@@ -64,7 +64,7 @@ import { useEnv } from '~~/store/environment'
 enum Role {
   ADMIN = 'ADMIN',
   TEACHER = 'TEACHER',
-  USER = 'USER'
+  STUDENT = 'STUDENT'
 }
 const props2 = defineProps({
   textDialog: { type: String, default: '' },
@@ -74,7 +74,7 @@ const data = reactive({
   dialog: false,
   rules: [
     (value: any) => {
-      return !value || !value.length || value[0].size < 2000000 || 'Avatar size should be less than 2 MB!'
+      return !value || !value.length || value[0].size < 6000000 || 'Avatar size should be less than 6 MB!'
     }
   ],
   id: '',
@@ -82,7 +82,7 @@ const data = reactive({
   email: '',
   password: '',
   confirmPassword: '',
-  role: Role.USER,
+  role: Role.STUDENT,
   avatar: ref(undefined)
 })
 if (props2.value !== undefined) {
@@ -106,8 +106,8 @@ const closeDialog = () => {
 }
 
 const onSubmit = async () => {
-  // if (data.role === 'USER') {
-  //   data.role = Role.USER
+  // if (data.role === 'STUDENT') {
+  //   data.role = Role.STUDENT
   // }
   if (newAvatar.value !== undefined) {
     const res = await $fetch(`${useEnv().BACKEND_API_URL}/upload/image`,

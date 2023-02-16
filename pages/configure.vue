@@ -14,7 +14,7 @@ if (useCookie('token').value === null) {
   useRouter().push('/login')
 }
 
-if (useProfile().role === 'USER' || useProfile().role === 'TEACHER') {
+if (useProfile().role === 'STUDENT' || useProfile().role === 'TEACHER') {
   useRouter().push('/welcome')
 }
 await queryDatabase({

@@ -54,7 +54,12 @@
         </v-app-bar>
         <v-navigation-drawer v-model="data.drawer" temporary>
           <div class="flex align-center">
-            <v-list-item :prepend-avatar="`${data.avatar.startsWith('http') ? 'https://picsum.photos/300/300': `${data.http}/images/${data.avatar}`}`" :title="data.name" :subtitle="data.email" nav />
+            <v-list-item
+              :prepend-avatar="`${data.avatar.startsWith('http') ? 'https://picsum.photos/300/300': `${data.http}/images/${data.avatar}`}`"
+              :title="data.name"
+              :subtitle="userRole === 'STUDENT' ? data.credentialId : data.email"
+              nav
+            />
             <v-chip :color="getColor()">
               {{ userRole }}
             </v-chip>
@@ -119,7 +124,7 @@ import { Role } from '~~/types/graphql'
 const contact = ref<any[]>([
   {
     icon: 'mdi-contacts-outline',
-    title: 'Contact',
+    title: 'Contact Admin',
     to: '/contact'
   }
 ])
@@ -160,6 +165,7 @@ const data = reactive({
   name: '',
   email: '',
   avatar: '',
+  credentialId: '',
   clipped: false,
   drawer: false,
   fixed: false,
@@ -224,6 +230,7 @@ type typeToken ={
   iat?: number;
   userId: string;
   role: Role;
+  credentialId: string;
   email: string;
   avatar: string;
   name: string;
@@ -239,7 +246,15 @@ const deToken = jwtDecode(token?.data.login) as typeToken
 data.email = deToken.email
 data.avatar = deToken.avatar
 data.name = deToken.name
-useProfile().setUser({ userId: deToken.userId, email: deToken.email, avatar: deToken.avatar, role: deToken.role, name: deToken.name })
+data.credentialId = deToken.credentialId
+useProfile().setUser({
+  userId: deToken.userId,
+  email: deToken.email,
+  avatar: deToken.avatar,
+  role: deToken.role,
+  name: deToken.name,
+  credentialId: deToken.credentialId
+})
 
 onBeforeMount(() => {
   mutationsDatabase().createLogLogin({ onResult: () => {}, onError: () => {}, value: { id: deToken.userId } })

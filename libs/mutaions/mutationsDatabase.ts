@@ -25,7 +25,7 @@ import {
   UPDATE_STATUS,
   UPDATE_USER
 } from '~~/apollo/mutation'
-import { LIST_FILE_UPLOAD_BY_PROJECT_ID, LIST_FILE_UPLOAD_BY_ROOM, LIST_LOG_LOGIN_BY_ID, LIST_MESSAGES_BY_MESSAGE_ROOM_ID, LIST_MESSAGES_BY_PROJECT_ID, LIST_ROOM_BY_ROOM_ID } from '~~/apollo/query'
+import { LIST_FILE_UPLOAD_BY_PROJECT_ID, LIST_FILE_UPLOAD_BY_ROOM, LIST_LOG_LOGIN_BY_ID, LIST_MESSAGES_BY_MESSAGE_ROOM_ID, LIST_MESSAGES_BY_PROJECT_ID, LIST_ROOM_BY_ROOM_ID, LIST_USERS_PROJECT } from '~~/apollo/query'
 import { useFileUpload } from '~~/store/fileUpload'
 import { useLogLogin } from '~~/store/logLogin'
 import { useMessage } from '~~/store/message'
@@ -115,7 +115,6 @@ const mutationsDatabase = () => {
   }
   const updateProjectTypes = async ({ onResult, onError, value }:any) => {
     try {
-      console.log('value :>> ', value)
       const res = await useMutation(UPDATE_PROJECT_TYPES).mutate(value)
       onResult(res)
     } catch (error) {
@@ -297,6 +296,15 @@ const mutationsDatabase = () => {
       onError(error)
     }
   }
+  const getUserProject = async ({ onResult, onError, value }:any) => {
+    try {
+      const res = await useAsyncQuery<any>(LIST_USERS_PROJECT, { id: value })
+      // useUserProject().setUserProject(res.data.value?.getUserProject)
+      onResult(res.data.value?.getUserProject)
+    } catch (error) {
+      onError(error)
+    }
+  }
 
   return {
     login,
@@ -344,7 +352,9 @@ const mutationsDatabase = () => {
 
     createManyUserMessageRoom,
 
-    getRoomByRoomId
+    getRoomByRoomId,
+
+    getUserProject
   }
 }
 export default mutationsDatabase

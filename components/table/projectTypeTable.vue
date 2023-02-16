@@ -82,7 +82,7 @@ import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
 import queryDatabase from '~~/libs/query/queryDatabase'
 import { useProfile } from '~~/store/profile'
 import { useQueryStore } from '~~/store/queryData'
-if (useProfile().role === 'USER') {
+if (useProfile().role === 'STUDENT') {
   useRouter().push('/welcome')
 }
 const data = reactive({
@@ -128,7 +128,7 @@ const deleteItem = (item: any) => {
 }
 
 const deleteItemConfirm = () => {
-  mutationsDatabase().deleteStatus({ onResult: (res:any) => { console.log('res', res) }, value: data.deleteIndex })
+  mutationsDatabase().deleteStatus({ onResult: () => { }, value: data.deleteIndex })
         types!.splice(data.editedIndex, 1)
         closeDelete()
 }

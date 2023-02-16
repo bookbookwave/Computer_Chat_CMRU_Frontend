@@ -42,7 +42,7 @@
                 prepend-icon="mdi-list-status"
                 item-title="name"
                 item-value="name"
-                label="Project Status"
+                label="Project Progress"
               >
                 <template #item="{ props, item }">
                   <v-list-item
@@ -87,13 +87,14 @@
 
 <script lang="ts" setup>
 import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
+import queryDatabase from '~~/libs/query/queryDatabase'
 import { useEnv } from '~~/store/environment'
 import { useQueryStore } from '~~/store/queryData'
 
 enum Role {
   ADMIN = 'ADMIN',
   TEACHER = 'TEACHER',
-  USER = 'USER'
+  STUDENT = 'STUDENT'
 }
 const props2 = defineProps({
   textDialog: { type: String, default: '' },
@@ -104,13 +105,13 @@ const data = reactive({
   dialog: false,
   rules: [
     (value: any) => {
-      return !value || !value.length || value[0].size < 2000000 || 'Avatar size should be less than 2 MB!'
+      return !value || !value.length || value[0].size < 6000000 || 'Avatar size should be less than 6 MB!'
     }
   ],
   projectId: '',
   filename: '',
   comment: '',
-  role: Role.USER,
+  role: Role.STUDENT,
   status: '',
   avatar: ref(undefined),
   messageRoom: ''
@@ -122,13 +123,15 @@ if (props2.roomId !== '' || props2.messageRoomId !== '') {
 
 const status = await useQueryStore().status as any
 
+const thisProject = await useQueryStore().projectById.find((project :any) => { return project.id === props2.roomId }) as any
+data.status = thisProject?.status.name.toString()
+
 const newFile = ref()
 const handleSelectFile = (event:any) => {
   const file = event.target.files[0]
   const formData = new FormData()
   formData.append('file', file)
   newFile.value = formData
-  console.log('newFile.value :>> ', newFile.value)
 }
 
 const emit = defineEmits(['dialogFalse'])
@@ -137,10 +140,9 @@ const closeDialog = () => {
 }
 
 const onSubmit = async () => {
-  console.log('data :>> ', data)
   const newStatus = status.filter((val:any) => val.name === data.status)[0].id
-  // if (data.role === 'USER') {
-  //   data.role = Role.USER
+  // if (data.role === 'STUDENT') {
+  //   data.role = Role.STUDENT
   // }
   if (newFile.value !== undefined) {
     const res = await $fetch(`${useEnv().BACKEND_API_URL}/upload/file`,
@@ -148,7 +150,7 @@ const onSubmit = async () => {
     if (props2.textDialog === 'Upload File') {
       mutationsDatabase().createFile({
         onResult: () => {
-          window.location.reload()
+          // window.location.reload()
           data.dialog = false
           emit('dialogFalse')
         },

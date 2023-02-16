@@ -15,7 +15,7 @@ if (useCookie('token').value === null) {
   useRouter().push('/login')
 }
 
-if (useProfile().role === 'USER') {
+if (useProfile().role === 'STUDENT') {
   useRouter().push('/welcome')
 }
 useHead({

@@ -60,7 +60,7 @@ const data = reactive({
   dialog: false,
   rules: [
     (value: any) => {
-      return !value || !value.length || value[0].size < 2000000 || 'Avatar size should be less than 2 MB!'
+      return !value || !value.length || value[0].size < 6000000 || 'Avatar size should be less than 6 MB!'
     }
   ],
   id: '',

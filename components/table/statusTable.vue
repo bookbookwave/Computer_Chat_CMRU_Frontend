@@ -6,7 +6,7 @@
           <v-toolbar flat>
             <div class="grid grid-cols-3 md:grid-cols-6 min-w-full min-h-full align-center">
               <v-toolbar-title class="relative col-start-1 text-center text-h5 font-weight-bold ">
-                Status
+                Progress
               </v-toolbar-title>
               <v-divider
                 class="mx-4"
@@ -19,7 +19,7 @@
                   <v-dialog v-model="data.dialog" persistent>
                     <template #activator="{ props }">
                       <v-btn color="primary" v-bind="props" prepend-icon="mdi-plus" rounded class="text-h6 font-weight-bold">
-                        Status
+                        Progress
                       </v-btn>
                     </template>
                     <FormStatusFormDialog :value="data.sentEditData" :text-dialog="data.dialogTitle" @dialog-false="closeDialog" />
@@ -82,7 +82,7 @@ import mutationsDatabase from '~~/libs/mutaions/mutationsDatabase'
 import queryDatabase from '~~/libs/query/queryDatabase'
 import { useProfile } from '~~/store/profile'
 import { useQueryStore } from '~~/store/queryData'
-if (useProfile().role === 'USER') {
+if (useProfile().role === 'STUDENT') {
   useRouter().push('/welcome')
 }
 const data = reactive({

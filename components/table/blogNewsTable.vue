@@ -146,8 +146,7 @@ const deleteItem = (item: any) => {
 
 const deleteItemConfirm = () => {
   mutationsDatabase().deleteBlogNews({
-    onResult: (res:any) => {
-      console.log('res', res)
+    onResult: () => {
     },
     onError: () => {},
     value: { id: data.deleteIndex }

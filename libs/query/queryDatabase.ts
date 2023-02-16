@@ -43,7 +43,6 @@ const queryDatabase = async ({ onResult, onError }:any) => {
 
     const projectById = await useAsyncQuery<any>(LIST_PROJECT_BY_ID, { id: useProfile().userId })
     useQueryStore().setProjectById(projectById.data.value?.projectsById)
-    console.log('projectById.data.value.projectById :>> ', projectById)
 
     const status = await useAsyncQuery<any>(LIST_STATUS)
     useQueryStore().setStatus(status.data.value?.getStatus)

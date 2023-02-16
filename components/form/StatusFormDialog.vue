@@ -52,8 +52,8 @@ const closeDialog = () => {
 }
 
 const onSubmit = () => {
-  // if (data.role === 'USER') {
-  //   data.role = Role.USER
+  // if (data.role === 'STUDENT') {
+  //   data.role = Role.STUDENT
   // }
   if (props2.textDialog === 'New') {
     mutationsDatabase().createStatus({
