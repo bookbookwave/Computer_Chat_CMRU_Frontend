@@ -148,14 +148,19 @@ const onClick = (link:any) => {
   window.open(`${link}`, '_blank')
   // useRouter().push('/welcome')
 }
-const getImage = (image: string) => {
+const getImage = async (image: string) => {
   const url = useEnv().BACKEND_API_URL
   // const newImage = `${image.startsWith('http') ? image : useFetch(`${data.url}/images/${image}`, { headers: { 'Content-Type': 'image/png', 'User-Agent': '' } })}`
   if (image.startsWith('http')) {
     return image
   } else {
-    const { data } = useFetch(`${url}/images/${image}`, { headers: { 'Content-Type': 'image/png', 'User-Agent': '', '': '' } })
-    return data
+    console.log('image :>> ', image)
+    const newImage = async () => {
+      const getImage = await useFetch(`${url}/images/${image}`)
+      return getImage.data
+    }
+    console.log('newImage :>> ', await newImage())
+    return newImage()
   }
 }
 
